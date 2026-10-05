@@ -4,15 +4,15 @@
   "bad_kind": "rev",
   "bad_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
   "bad_result": "FAIL",
-  "good_target": "",
-  "good_kind": "",
-  "good_rev": null,
-  "good_result": "",
-  "time": "2026-10-05T19:28:48+05:30",
-  "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "good_target": "29e0bce",
+  "good_kind": "rev",
+  "good_rev": "29e0bce0b72eb46f41203b467b44d943c16ebb06",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:31:27+05:30",
+  "git_rev": "29e0bce0b72eb46f41203b467b44d943c16ebb06",
   "status": "calibrated",
   "bad_output": "FAIL S3 inc3-manager-unknown-user | reset with unknown manager: 204; import with unknown manager: 204 | \"Restaurants may now declare `manager_user_ids` in their reset fixture (default `[]`). Only these users may publish policies.\"",
-  "good_output": "",
+  "good_output": "PASS S3 inc3-manager-unknown-user | \"Restaurants may now declare `manager_user_ids` in their reset fixture (default `[]`). Only these users may publish policies.\"",
   "history": [
     {
       "probe": "checks/sweep/S3/inc3-manager-unknown-user.mjs",
@@ -26,6 +26,20 @@
       "good_result": "",
       "time": "2026-10-05T19:28:48+05:30",
       "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "status": "calibrated"
+    },
+    {
+      "probe": "checks/sweep/S3/inc3-manager-unknown-user.mjs",
+      "bad_target": "542cd39",
+      "bad_kind": "rev",
+      "bad_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "bad_result": "FAIL",
+      "good_target": "29e0bce",
+      "good_kind": "rev",
+      "good_rev": "29e0bce0b72eb46f41203b467b44d943c16ebb06",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:31:27+05:30",
+      "git_rev": "29e0bce0b72eb46f41203b467b44d943c16ebb06",
       "status": "calibrated"
     }
   ]
