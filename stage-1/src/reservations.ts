@@ -3,7 +3,7 @@ import { fail, malformed, notFound, validation } from "./errors.ts";
 import { lookup, readKey, record } from "./idempotency.ts";
 import type { Router } from "./router.ts";
 import { resolveStart } from "./schedule.ts";
-import { findOverlap, newReference, newReservationId, nowRfc3339, restaurantById, toPublic, transact } from "./store.ts";
+import { findOverlap, newReference, newReservationId, nowRfc3339, read, restaurantById, toPublic, transact } from "./store.ts";
 import type { Reservation, Restaurant, State } from "./store.ts";
 import { formatInstant, parseLocal } from "./time.ts";
 import { asObject, isInt } from "./validate.ts";
@@ -68,6 +68,12 @@ export function applyBooked(rec: Reservation, restaurant: Restaurant, b: Booked)
   rec.ends_at = formatInstant(restaurant.timezone, b.end_ms);
 }
 
+/** The caller's reservation by reference; someone else's or unknown is 404 (no leak). */
+export function ownedReservation(s: State, userId: string, reference: string): Reservation {
+  const rec = s.reservations.find((r) => r.reference === reference && r.user_id === userId);
+  return rec ?? notFound("no such reservation");
+}
+
 export function register(router: Router): void {
   router.add("POST", "/reservations", { auth: true }, (ctx) => {
     const user = ctx.user!;
@@ -91,6 +97,40 @@ export function register(router: Router): void {
       const response = toPublic(rec);
       record(s, user.id, ctx.method, ctx.path, key, body, 201, response);
       return { status: 201, body: response };
+    });
+  });
+
+  router.add("GET", "/reservations", { auth: true }, (ctx) => {
+    const mine = read().reservations.filter((r) => r.user_id === ctx.user!.id);
+    mine.sort((a, b) => b.start_ms - a.start_ms || (a.reference < b.reference ? -1 : 1));
+    return { status: 200, body: { reservations: mine.map(toPublic) } };
+  });
+
+  router.add("GET", "/reservations/:reference", { auth: true }, (ctx) => {
+    const rec = ownedReservation(read(), ctx.user!.id, ctx.params.reference);
+    return { status: 200, body: toPublic(rec) };
+  });
+
+  router.add("POST", "/reservations/:reference/cancel", { auth: true }, (ctx) => transact((s: State) => {
+    const rec = ownedReservation(s, ctx.user!.id, ctx.params.reference);
+    if (rec.status === "cancelled") return { status: 200, body: toPublic(rec) };
+    checkCutoff(rec, restaurantById(s, rec.restaurant_id)!, Date.now());
+    rec.status = "cancelled";
+    return { status: 200, body: toPublic(rec) };
+  }));
+
+  router.add("PATCH", "/reservations/:reference", { auth: true }, (ctx) => {
+    const body = asObject(ctx.json());
+    return transact((s: State) => {
+      const rec = ownedReservation(s, ctx.user!.id, ctx.params.reference);
+      const restaurant = restaurantById(s, rec.restaurant_id)!;
+      checkNotCancelled(rec);
+      checkCutoff(rec, restaurant, Date.now());
+      checkShape(body, false, false);
+      const b = resolveBooking(restaurant, body, rec);
+      if (findOverlap(s, restaurant.id, b.table_id, b.start_ms, b.end_ms, rec.reference)) fail(409, "table_unavailable", "the table is taken for an overlapping time");
+      applyBooked(rec, restaurant, b);
+      return { status: 200, body: toPublic(rec) };
     });
   });
 }
