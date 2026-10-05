@@ -1,0 +1,10 @@
+SWEEP stage 1 on d01c189 (stage-1 unchanged at 936632e)
+PASS INC-1 import-ref-duplicate | "unique across all reservations"
+PASS INC-1 import-ref-format | "`reference` is 6 to 12 characters of `A-Z0-9`"
+PASS INC-1 seed-dup-restaurant | "IDs are opaque strings"
+PASS INC-1 seed-dup-user-id | "IDs are opaque strings"
+PASS INC-1 seed-overlap | "Two `confirmed` reservations must never occupy the same table at overlapping times"
+PASS INC-1 seed-ref-duplicate | "unique across all reservations"
+PASS INC-1 seed-ref-format | "`reference` is 6 to 12 characters of `A-Z0-9`"
+PASS INC-1 seed-table-foreign | "the table belongs to another restaurant"
+PASS INC-1 seed-unknown-user | "`reservations` may seed confirmed bookings, with the same fields as a `POST /reservations` body plus `id`, `reference` and `user_id`."
