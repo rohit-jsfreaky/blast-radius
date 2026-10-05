@@ -10,7 +10,8 @@ end:
 | stage | plan sent | done | accepted rev | defects (checks / sweep) | cards | notes |
 |---|---|---|---|---|---|---|
 | 1 | 17:47 | 18:28 | 5014e13 | 1 / 5 | INC-1 (family 9) | GATE PASS, SWEEP CLEAR; ledger probed 11/61 (limitation) |
-| 2 | 18:32 | | | | | |
+| 2 | 18:32 | 19:06 | fe88890 | 0 / 1 (INC-2) | INC-2 (family 4) | GATE PASS official-s2-c, SWEEP CLEAR |
+| 3 | 19:10 | | | | | |
 
 ## Open REJECTs
 (none)
@@ -32,3 +33,4 @@ end:
 - 18:31 READY H2.2 builder-b 8df6fc9. ledger L2.1-25 (602ef52); family map stage 2 (95471b0). Waiting READY H2.1 (UI).
 - 18:44 READY H2.1 builder-a f1e0296; builder-b f52bf75 (INC-1 risk applied). VERIFY H2.V1 sent.
 - 18:56 GATE PASS stage 2 @64f99e9 (official-s2-b). OPEN REJECT INC2.1 | L1.17 sibling of INC-1 | builder-b | seeded/imported party exceeds capacity. UI family probes pending (investigator).
+- 19:06 STAGE 2 DONE rev fe88890. 19:10 STAGE PLAN 3 + H3.1 (builder-a WI3.1-3.4) + H3.2 (builder-b WI3.5-3.7) sent.
