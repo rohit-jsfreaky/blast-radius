@@ -41,11 +41,17 @@ function parseRestaurant(raw: unknown): Restaurant {
   });
   const cutoff = r.cancellation_cutoff_minutes ?? 0;
   if (!isInt(cutoff) || cutoff < 0) bad("cancellation_cutoff_minutes must be a non-negative integer");
+  const combinable = arr(r.combinable ?? [], "combinable").map((x) => {
+    const pair = arr(x, "combinable entry").map((t) => str(t, "combinable table id"));
+    if (pair.length !== 2 || pair[0] === pair[1]) bad("each combinable entry must be a pair of two different tables");
+    if (!pair.every((t) => tables.some((q) => q.id === t))) bad("combinable names a table that is not at the restaurant");
+    return pair;
+  });
   return {
     id: id(r.id, "restaurant id"), name: typeof r.name === "string" ? r.name : String(r.id), timezone,
     slot_minutes: posInt(r.slot_minutes, "slot_minutes"),
     reservation_duration_minutes: posInt(r.reservation_duration_minutes, "reservation_duration_minutes"),
-    cancellation_cutoff_minutes: cutoff, opening_hours, tables,
+    cancellation_cutoff_minutes: cutoff, opening_hours, tables, combinable,
   };
 }
 
@@ -64,11 +70,20 @@ function checkIntegrity(s: State): void {
   for (const r of s.reservations) {
     const rest = s.restaurants.find((q) => q.id === r.restaurant_id);
     if (!rest) bad("reservation names an unknown restaurant");
-    if (!rest!.tables.some((t) => t.id === r.table_id)) bad("reservation names a table that is not at its restaurant");
+    if (!r.table_ids.length || !r.table_ids.every((id) => rest!.tables.some((t) => t.id === id))) bad("reservation names a table that is not at its restaurant");
     if (!userIds.has(r.user_id)) bad("reservation names an unknown user");
-    if (r.status === "confirmed" && findOverlap(placed, r.restaurant_id, r.table_id, r.start_ms, r.end_ms)) bad("two confirmed reservations overlap on one table");
+    if (r.status === "confirmed" && findOverlap(placed, r.restaurant_id, r.table_ids, r.start_ms, r.end_ms)) bad("two confirmed reservations overlap on one table");
     placed.reservations.push(r);
   }
+}
+
+/** A seeded reservation holds `table_id` or `table_ids` (not both): one or more distinct ids. */
+function seededTables(r: Obj): string[] {
+  if (r.table_id !== undefined && r.table_ids !== undefined) bad("reservation has both table_id and table_ids");
+  const raw = r.table_ids !== undefined ? arr(r.table_ids, "table_ids") : [r.table_id];
+  const ids = raw.map((t) => id(t, "reservation table id"));
+  if (ids.length === 0 || new Set(ids).size !== ids.length) bad("reservation table_ids must be distinct and not empty");
+  return ids;
 }
 
 /** `fixture` -> a fresh State. Passwords are hashed (async) before anything is replaced. */
@@ -100,7 +115,7 @@ export async function stateFromFixture(raw: unknown): Promise<State> {
     const tz = rest!.timezone;
     const res: Reservation = {
       reservation_id: id(r.id ?? r.reservation_id, "reservation id"), reference: reference(r.reference),
-      restaurant_id: rest!.id, table_id: id(r.table_id, "reservation table_id"), party_size: posInt(r.party_size, "party_size"),
+      restaurant_id: rest!.id, table_ids: seededTables(r), party_size: posInt(r.party_size, "party_size"),
       status: r.status === "cancelled" ? "cancelled" : "confirmed", starts_at_local: r.starts_at_local as string,
       starts_at: formatInstant(tz, start!), ends_at: formatInstant(tz, end),
       created_at: typeof r.created_at === "string" ? r.created_at : nowRfc3339(),
@@ -118,6 +133,13 @@ export function stateFromExport(raw: unknown): State {
   const o = obj(raw, "state");
   if (o.version !== undefined && (!isInt(o.version) || o.version < 1 || o.version > STATE_VERSION)) bad("unsupported state version");
   const s: State = { ...emptyState(), ...(structuredClone(o) as Obj), version: STATE_VERSION } as State;
+  // Older exports (stage 1): a reservation holds `table_id`; restaurants have no `combinable` (D7: missing fields default).
+  if (Array.isArray(s.reservations)) {
+    for (const r of s.reservations as unknown as Obj[]) {
+      if (isObj(r) && r.table_ids === undefined && typeof r.table_id === "string") r.table_ids = [r.table_id];
+      if (isObj(r)) delete r.table_id;
+    }
+  }
   const seq = obj(s.seq, "seq");
   if (!isInt(seq.user) || !isInt(seq.reservation)) bad("seq counters must be integers");
   if (!Array.isArray(s.users) || !Array.isArray(s.restaurants) || !Array.isArray(s.reservations)) bad("users, restaurants and reservations must be arrays");
@@ -134,16 +156,20 @@ export function stateFromExport(raw: unknown): State {
   }
   for (const [tok, uid] of Object.entries(s.tokens)) if (typeof uid !== "string" || !ids.has(uid)) bad(`token ${tok.slice(0, 4)}… names an unknown user`);
   const rids = new Set<string>();
+  const parsedRestaurants: Restaurant[] = [];
   for (const r of s.restaurants as Restaurant[]) {
     const p = parseRestaurant(r);
     if (rids.has(p.id)) bad("duplicate restaurant id");
     rids.add(p.id);
+    parsedRestaurants.push(p);
   }
+  s.restaurants = parsedRestaurants;
   const refs = new Set<string>();
   const resIds = new Set<string>();
   for (const r of s.reservations as Reservation[]) {
     const x = obj(r, "reservation");
-    for (const f of ["reservation_id", "reference", "restaurant_id", "table_id", "starts_at_local", "starts_at", "ends_at", "created_at", "user_id"]) str(x[f], f);
+    if (!Array.isArray(x.table_ids) || !x.table_ids.length || x.table_ids.some((t) => typeof t !== "string")) bad("reservation table_ids is invalid");
+    for (const f of ["reservation_id", "reference", "restaurant_id", "starts_at_local", "starts_at", "ends_at", "created_at", "user_id"]) str(x[f], f);
     if (x.status !== "confirmed" && x.status !== "cancelled") bad("reservation status is invalid");
     if (!isInt(x.party_size) || typeof x.start_ms !== "number" || typeof x.end_ms !== "number") bad("reservation numbers are invalid");
     if (!rids.has(x.restaurant_id as string)) bad("reservation names an unknown restaurant");

@@ -4,7 +4,8 @@ import { notFound, validation } from "./errors.ts";
 import { stateFromExport, stateFromFixture } from "./fixture.ts";
 import type { Router } from "./router.ts";
 import { slotsOn } from "./schedule.ts";
-import { findOverlap, read, replaceState, restaurantById } from "./store.ts";
+import { read, replaceState, restaurantById } from "./store.ts";
+import { freeOptions } from "./tables.ts";
 import { formatInstant, parseDate } from "./time.ts";
 import { asObject, queryInt, queryString } from "./validate.ts";
 
@@ -54,14 +55,15 @@ export function registerCoreRoutes(router: Router): void {
     const s = read();
     const r = restaurantById(s, rid) ?? notFound("no such restaurant");
     const dur = r.reservation_duration_minutes * 60000;
-    const slots = slotsOn(r, date.y, date.mo, date.d).map((sl) => ({
-      starts_at_local: sl.local,
-      starts_at: formatInstant(r.timezone, sl.start_ms),
-      available_table_ids: r.tables
-        .filter((t) => t.capacity >= party)
-        .filter((t) => !findOverlap(s, r.id, t.id, sl.start_ms, sl.start_ms + dur))
-        .map((t) => t.id),
-    }));
+    const slots = slotsOn(r, date.y, date.mo, date.d).map((sl) => {
+      const options = freeOptions(s, r, party, sl.start_ms, sl.start_ms + dur);
+      return {
+        starts_at_local: sl.local,
+        starts_at: formatInstant(r.timezone, sl.start_ms),
+        available_table_ids: options.filter((o) => o.table_ids.length === 1).map((o) => o.table_ids[0]),
+        available_options: options,
+      };
+    });
     return { status: 200, body: { restaurant_id: r.id, date: dateStr, timezone: r.timezone, slots } };
   });
 }

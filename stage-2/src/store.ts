@@ -3,7 +3,7 @@ import { randomBytes } from "node:crypto";
 import { ApiError } from "./errors.ts";
 import { formatInstant } from "./time.ts";
 
-export const STATE_VERSION = 1;
+export const STATE_VERSION = 2;
 
 export interface ScryptHash { algo: "scrypt"; N: number; r: number; p: number; salt: string; hash: string }
 export interface User { id: string; email: string; display_name: string; password: ScryptHash; created_at: string }
@@ -13,10 +13,12 @@ export interface Restaurant {
   id: string; name: string; timezone: string; slot_minutes: number;
   reservation_duration_minutes: number; cancellation_cutoff_minutes: number;
   opening_hours: OpeningHours[]; tables: Table[];
+  /** Declared combinable pairs (unordered, pairs only, not transitive), table ids of this restaurant. */
+  combinable: string[][];
 }
 /** Public fields (what the API returns) + owner + the instants used for occupancy. */
 export interface Reservation {
-  reservation_id: string; reference: string; restaurant_id: string; table_id: string; party_size: number;
+  reservation_id: string; reference: string; restaurant_id: string; table_ids: string[]; party_size: number;
   status: "confirmed" | "cancelled"; starts_at_local: string; starts_at: string; ends_at: string; created_at: string;
   user_id: string; start_ms: number; end_ms: number;
 }
@@ -64,18 +66,20 @@ export function transact<T>(fn: (draft: State) => T): T {
 export const restaurantById = (s: State, id: string): Restaurant | undefined => s.restaurants.find((r) => r.id === id);
 export const reservationByRef = (s: State, ref: string): Reservation | undefined => s.reservations.find((r) => r.reference === ref);
 
-/** A confirmed reservation on that restaurant's `tableId` (table ids are only unique within a restaurant) whose half-open interval [start_ms, end_ms) overlaps [startMs, endMs). */
-export function findOverlap(s: State, restaurantId: string, tableId: string, startMs: number, endMs: number, ignoreRef?: string): Reservation | undefined {
+/** A confirmed reservation at that restaurant holding ANY of `tableIds` (table ids are only unique within a restaurant) whose half-open interval [start_ms, end_ms) overlaps [startMs, endMs). The one occupancy predicate for singles and pairs. */
+export function findOverlap(s: State, restaurantId: string, tableIds: string | string[], startMs: number, endMs: number, ignoreRef?: string): Reservation | undefined {
+  const ids = typeof tableIds === "string" ? [tableIds] : tableIds;
   return s.reservations.find(
-    (r) => r.status === "confirmed" && r.restaurant_id === restaurantId && r.table_id === tableId && r.reference !== ignoreRef && r.start_ms < endMs && startMs < r.end_ms,
+    (r) => r.status === "confirmed" && r.restaurant_id === restaurantId && r.reference !== ignoreRef && r.start_ms < endMs && startMs < r.end_ms
+      && r.table_ids.some((t) => ids.includes(t)),
   );
 }
 
 /** The reservation as the API shows it (no owner, no internal instants). */
 export function toPublic(r: Reservation) {
   return {
-    reservation_id: r.reservation_id, reference: r.reference, restaurant_id: r.restaurant_id, table_id: r.table_id,
-    party_size: r.party_size, status: r.status, starts_at_local: r.starts_at_local, starts_at: r.starts_at,
+    reservation_id: r.reservation_id, reference: r.reference, restaurant_id: r.restaurant_id,
+    ...(r.table_ids.length === 1 ? { table_id: r.table_ids[0] } : {}), table_ids: [...r.table_ids], party_size: r.party_size, status: r.status, starts_at_local: r.starts_at_local, starts_at: r.starts_at,
     ends_at: r.ends_at, created_at: r.created_at,
   };
 }
