@@ -5,6 +5,7 @@ import type { Router } from "./router.ts";
 import { resolveStart } from "./schedule.ts";
 import { findOverlap, newReference, newReservationId, nowRfc3339, read, restaurantById, toPublic, transact } from "./store.ts";
 import type { Reservation, Restaurant, State } from "./store.ts";
+import { readTableIds, resolveTableSet, setCapacity } from "./tables.ts";
 import { formatInstant, parseLocal } from "./time.ts";
 import { asObject, isInt } from "./validate.ts";
 import type { Obj } from "./validate.ts";
@@ -15,13 +16,18 @@ import type { Obj } from "./validate.ts";
  * party_size: anything but an integer >= 1 -> 422. Other fields: wrong JSON type -> 400, null/missing/bad format -> 422.
  */
 export function checkShape(o: Obj, required: boolean, withRestaurant: boolean): void {
-  const names = withRestaurant ? ["restaurant_id", "table_id", "starts_at_local"] : ["table_id", "starts_at_local"];
-  for (const f of names) {
-    const v = o[f];
-    if (v === undefined) { if (required) validation(`${f} is required`); continue; }
-    if (v === null) validation(`${f} must not be null`);
-    if (typeof v !== "string") malformed(`${f} must be a string`);
-    if (f === "starts_at_local" && !parseLocal(v)) validation("starts_at_local must be a bare local YYYY-MM-DDTHH:MM");
+  if (withRestaurant) {
+    const v = o.restaurant_id;
+    if (v === undefined || v === null) validation("restaurant_id is required");
+    if (typeof v !== "string") malformed("restaurant_id must be a string");
+  }
+  if (readTableIds(o) === undefined && required) validation("table_id or table_ids is required");
+  const v = o.starts_at_local;
+  if (v === undefined) { if (required) validation("starts_at_local is required"); }
+  else {
+    if (v === null) validation("starts_at_local must not be null");
+    if (typeof v !== "string") malformed("starts_at_local must be a string");
+    if (!parseLocal(v)) validation("starts_at_local must be a bare local YYYY-MM-DDTHH:MM");
   }
   if (o.party_size === undefined) { if (required) validation("party_size is required"); }
   else if (!isInt(o.party_size) || o.party_size < 1) validation("party_size must be a whole number of at least 1");
@@ -36,17 +42,16 @@ export function checkNotCancelled(rec: Reservation): void {
   if (rec.status === "cancelled") fail(409, "reservation_cancelled", "reservation is cancelled");
 }
 
-export interface Booked { table_id: string; party_size: number; starts_at_local: string; start_ms: number; end_ms: number }
+export interface Booked { table_ids: string[]; party_size: number; starts_at_local: string; start_ms: number; end_ms: number }
 
 /**
- * Everything except occupancy, in one order: shape (done by the caller) -> table exists in the restaurant (404)
+ * Everything except occupancy, in one order: shape (done by the caller) -> tables exist (404) and form a declared set (combination_not_allowed)
  * -> start validity (invalid_local_time, outside_opening_hours, not_on_slot_grid) -> party_exceeds_capacity.
  * `base` is the current booking for amendments: omitted fields keep their values and are not re-validated.
  */
 export function resolveBooking(restaurant: Restaurant, o: Obj, base: Reservation | null): Booked {
-  const tableId = (o.table_id as string | undefined) ?? base?.table_id as string;
-  const table = restaurant.tables.find((t) => t.id === tableId);
-  if (!table) return notFound("no such table at this restaurant");
+  const named = readTableIds(o);
+  const tableIds = resolveTableSet(restaurant, named ?? base!.table_ids);
   let local = base?.starts_at_local as string, startMs = base?.start_ms as number, endMs = base?.end_ms as number;
   if (o.starts_at_local !== undefined) {
     local = o.starts_at_local as string;
@@ -54,15 +59,15 @@ export function resolveBooking(restaurant: Restaurant, o: Obj, base: Reservation
     startMs = b.start_ms; endMs = b.end_ms;
   }
   const party = (o.party_size as number | undefined) ?? base?.party_size as number;
-  if (base === null || o.table_id !== undefined || o.party_size !== undefined) {
-    if (party > table.capacity) fail(422, "party_exceeds_capacity", "party is larger than the table's capacity");
+  if (base === null || named !== undefined || o.party_size !== undefined) {
+    if (party > setCapacity(restaurant, tableIds)) fail(422, "party_exceeds_capacity", "party is larger than the tables' capacity");
   }
-  return { table_id: tableId, party_size: party, starts_at_local: local, start_ms: startMs, end_ms: endMs };
+  return { table_ids: tableIds, party_size: party, starts_at_local: local, start_ms: startMs, end_ms: endMs };
 }
 
 /** Apply a resolved booking to a record, refreshing its derived public fields. */
 export function applyBooked(rec: Reservation, restaurant: Restaurant, b: Booked): void {
-  rec.table_id = b.table_id; rec.party_size = b.party_size; rec.starts_at_local = b.starts_at_local;
+  rec.table_ids = b.table_ids; rec.party_size = b.party_size; rec.starts_at_local = b.starts_at_local;
   rec.start_ms = b.start_ms; rec.end_ms = b.end_ms;
   rec.starts_at = formatInstant(restaurant.timezone, b.start_ms);
   rec.ends_at = formatInstant(restaurant.timezone, b.end_ms);
@@ -86,10 +91,10 @@ export function register(router: Router): void {
       const restaurant = restaurantById(s, body.restaurant_id as string);
       if (!restaurant) return notFound("no such restaurant");
       const b = resolveBooking(restaurant, body, null);
-      if (findOverlap(s, restaurant.id, b.table_id, b.start_ms, b.end_ms)) fail(409, "table_unavailable", "the table is taken for an overlapping time");
+      if (findOverlap(s, restaurant.id, b.table_ids, b.start_ms, b.end_ms)) fail(409, "table_unavailable", "the table is taken for an overlapping time");
       const rec: Reservation = {
         reservation_id: newReservationId(s), reference: newReference(s), restaurant_id: restaurant.id,
-        table_id: b.table_id, party_size: b.party_size, status: "confirmed", starts_at_local: b.starts_at_local,
+        table_ids: b.table_ids, party_size: b.party_size, status: "confirmed", starts_at_local: b.starts_at_local,
         starts_at: "", ends_at: "", created_at: nowRfc3339(), user_id: user.id, start_ms: b.start_ms, end_ms: b.end_ms,
       };
       applyBooked(rec, restaurant, b);
@@ -128,7 +133,7 @@ export function register(router: Router): void {
       checkCutoff(rec, restaurant, Date.now());
       checkShape(body, false, false);
       const b = resolveBooking(restaurant, body, rec);
-      if (findOverlap(s, restaurant.id, b.table_id, b.start_ms, b.end_ms, rec.reference)) fail(409, "table_unavailable", "the table is taken for an overlapping time");
+      if (findOverlap(s, restaurant.id, b.table_ids, b.start_ms, b.end_ms, rec.reference)) fail(409, "table_unavailable", "the table is taken for an overlapping time");
       applyBooked(rec, restaurant, b);
       return { status: 200, body: toPublic(rec) };
     });

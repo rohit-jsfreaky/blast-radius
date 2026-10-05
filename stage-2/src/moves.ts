@@ -44,7 +44,7 @@ export function register(router: Router): void {
       // Apply all to the draft, then every resulting booking must be free of every other confirmed booking.
       recs.forEach((r, i) => applyBooked(r, restaurant, resolved[i]));
       for (const r of recs) {
-        if (findOverlap(s, restaurant.id, r.table_id, r.start_ms, r.end_ms, r.reference)) fail(409, "table_unavailable", "the table is taken for an overlapping time");
+        if (findOverlap(s, restaurant.id, r.table_ids, r.start_ms, r.end_ms, r.reference)) fail(409, "table_unavailable", "the table is taken for an overlapping time");
       }
       const response = { reservations: recs.map(toPublic) };
       record(s, user.id, ctx.method, ctx.path, key, body, 201, response);
