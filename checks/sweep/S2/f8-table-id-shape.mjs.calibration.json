@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/f8-table-id-shape.mjs",
+  "bad_target": "d2e3dfe",
+  "bad_kind": "rev",
+  "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:55:55+05:30",
+  "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 f8-table-id-shape | create 422/201 {\"error\":{\"code\":\"validation_failed\",\"message\":\"table_id is required\"}} | \"Responses always carry `table_ids`. They also carry `table_id` **when the set has exactly one member**, and omit it otherwise.\"",
+  "good_output": "PASS S2 f8-table-id-shape | \"Responses always carry `table_ids`. They also carry `table_id` **when the set has exactly one member**, and omit it otherwise.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/f8-table-id-shape.mjs",
+      "bad_target": "d2e3dfe",
+      "bad_kind": "rev",
+      "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:55:55+05:30",
+      "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "status": "calibrated"
+    }
+  ]
+}

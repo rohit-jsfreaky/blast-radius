@@ -7,3 +7,13 @@ checks/sweep/INC-1/seed-ref-duplicate.mjs
 checks/sweep/INC-1/seed-ref-format.mjs
 checks/sweep/INC-1/seed-table-foreign.mjs
 checks/sweep/INC-1/seed-unknown-user.mjs
+checks/sweep/S2/f12-cancel-frees-pair.mjs
+checks/sweep/S2/f12-options-order.mjs
+checks/sweep/S2/f17-stage1-upgrade.mjs
+checks/sweep/S2/f18-concurrent-pairs.mjs
+checks/sweep/S2/f2-pair-blocks-members.mjs
+checks/sweep/S2/f2-patch-moves-pair.mjs
+checks/sweep/S2/f8-table-id-shape.mjs
+checks/sweep/S2/f9-pair-rules.mjs
+checks/sweep/S2/inc1-seed-capacity.mjs
+checks/sweep/S2/inc1-seed-pairs.mjs

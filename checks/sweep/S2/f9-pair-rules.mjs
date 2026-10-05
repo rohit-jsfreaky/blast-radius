@@ -1,0 +1,25 @@
+import { run, J } from "./lib.mjs";
+await run("f9-pair-rules", "Combining is not transitive", async (call, h) => {
+  const t = await h.login(); const e = [];
+  const base = { restaurant_id: "r_anker", starts_at_local: "2027-09-23T19:00", party_size: 3 };
+  const want = async (what, body, s, code) => { const r = await h.book(t, { ...base, ...body }); if (r.s !== s || r.b?.error?.code !== code) e.push(`${what}: ${r.s} ${r.b?.error?.code} want ${s} ${code}`); };
+  await want("non-transitive t_1+t_3", { table_ids: ["t_1", "t_3"] }, 422, "combination_not_allowed");
+  await want("three tables", { table_ids: ["t_1", "t_2", "t_3"] }, 422, "combination_not_allowed");
+  await want("both fields", { table_id: "t_2", table_ids: ["t_1", "t_2"] }, 422, "validation_failed");
+  await want("duplicate", { table_ids: ["t_2", "t_2"] }, 422, "validation_failed");
+  await want("over summed capacity", { table_ids: ["t_1", "t_2"], party_size: 7 }, 422, "party_exceeds_capacity");
+  const ok = await h.book(t, { ...base, table_id: "t_3", party_size: 2, starts_at_local: "2027-09-23T21:00" });
+  const p1 = await call("PATCH", `/reservations/${ok.b.reference}`, { table_ids: ["t_1", "t_3"] }, h.auth(t));
+  if (p1.s !== 422 || p1.b?.error?.code !== "combination_not_allowed") e.push(`patch non-transitive ${p1.s} ${J(p1.b)}`);
+  const p2 = await call("PATCH", `/reservations/${ok.b.reference}`, { table_ids: ["t_2", "t_3"], party_size: 9 }, h.auth(t));
+  if (p2.s !== 422 || p2.b?.error?.code !== "party_exceeds_capacity") e.push(`patch over capacity ${p2.s} ${J(p2.b)}`);
+  const p3 = await call("PATCH", `/reservations/${ok.b.reference}`, { table_ids: ["t_2", "t_2"] }, h.auth(t));
+  if (p3.s !== 422 || p3.b?.error?.code !== "validation_failed") e.push(`patch duplicate ${p3.s} ${J(p3.b)}`);
+  const m = await call("POST", "/reservation-moves", { moves: [{ reference: ok.b.reference, table_ids: ["t_1", "t_3"] }] }, h.auth(t, "mv-nt"));
+  if (m.s !== 422 || m.b?.error?.code !== "combination_not_allowed") e.push(`moves non-transitive ${m.s} ${J(m.b)}`);
+  const m2 = await call("POST", "/reservation-moves", { moves: [{ reference: ok.b.reference, table_id: "t_3", table_ids: ["t_2", "t_3"] }] }, h.auth(t, "mv-both"));
+  if (m2.s !== 422 || m2.b?.error?.code !== "validation_failed") e.push(`moves both fields ${m2.s} ${J(m2.b)}`);
+  const g = await call("GET", `/reservations/${ok.b.reference}`, undefined, h.auth(t));
+  if (J(g.b.table_ids) !== J(["t_3"]) || g.b.party_size !== 2) e.push(`failed amendments changed booking ${J(g.b)}`);
+  return e.length ? e.join("; ") : true;
+});

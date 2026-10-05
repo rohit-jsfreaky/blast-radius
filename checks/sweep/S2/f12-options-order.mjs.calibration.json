@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/f12-options-order.mjs",
+  "bad_target": "d2e3dfe",
+  "bad_kind": "rev",
+  "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:56:01+05:30",
+  "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 f12-options-order | party 2 options undefined | \"Singles first in fixture order, then pairs in `combinable` order. `table_ids` within a pair is in `combinable` order.\"",
+  "good_output": "PASS S2 f12-options-order | \"Singles first in fixture order, then pairs in `combinable` order. `table_ids` within a pair is in `combinable` order.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/f12-options-order.mjs",
+      "bad_target": "d2e3dfe",
+      "bad_kind": "rev",
+      "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:56:01+05:30",
+      "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "status": "calibrated"
+    }
+  ]
+}

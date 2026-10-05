@@ -1,0 +1,46 @@
+{
+  "probe": "checks/sweep/S2/inc1-seed-pairs.mjs",
+  "bad_target": "d2e3dfe",
+  "bad_kind": "rev",
+  "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:56:03+05:30",
+  "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 inc1-seed-pairs | seeded both table_id and table_ids: reset 204; combinable names foreign table: reset 204; combinable triple: reset 204; combinable self pair: reset 204; combinable non-array entry: reset 204; valid seed (cancelled pair + confirmed single) rejected 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"reservation table_id must be a non-empty string\"}} | \"Each entry is an unordered pair of table ids in that restaurant. **Pairs only**\"",
+  "good_output": "PASS S2 inc1-seed-pairs | \"Each entry is an unordered pair of table ids in that restaurant. **Pairs only**\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/inc1-seed-pairs.mjs",
+      "bad_target": "64f99e9",
+      "bad_kind": "rev",
+      "bad_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "bad_result": "FAIL",
+      "good_target": "",
+      "good_kind": "",
+      "good_rev": null,
+      "good_result": "",
+      "time": "2026-10-05T18:55:40+05:30",
+      "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "status": "calibrated"
+    },
+    {
+      "probe": "checks/sweep/S2/inc1-seed-pairs.mjs",
+      "bad_target": "d2e3dfe",
+      "bad_kind": "rev",
+      "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:56:03+05:30",
+      "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "status": "calibrated"
+    }
+  ]
+}

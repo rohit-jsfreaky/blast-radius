@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/f2-pair-blocks-members.mjs",
+  "bad_target": "d2e3dfe",
+  "bad_kind": "rev",
+  "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:55:51+05:30",
+  "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 f2-pair-blocks-members | pair create 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"table_id is required\"}} | \"The booking occupies both tables for its full duration.\"",
+  "good_output": "PASS S2 f2-pair-blocks-members | \"The booking occupies both tables for its full duration.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/f2-pair-blocks-members.mjs",
+      "bad_target": "d2e3dfe",
+      "bad_kind": "rev",
+      "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:55:51+05:30",
+      "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "status": "calibrated"
+    }
+  ]
+}

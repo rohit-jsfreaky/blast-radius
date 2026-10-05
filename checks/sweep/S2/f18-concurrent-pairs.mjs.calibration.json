@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/f18-concurrent-pairs.mjs",
+  "bad_target": "d2e3dfe",
+  "bad_kind": "rev",
+  "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:56:05+05:30",
+  "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 f18-concurrent-pairs | error Cannot read properties of undefined (reading 'some') | \"Concurrent requests must produce the same results as executing them one at a time in some order\"",
+  "good_output": "PASS S2 f18-concurrent-pairs | \"Concurrent requests must produce the same results as executing them one at a time in some order\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/f18-concurrent-pairs.mjs",
+      "bad_target": "d2e3dfe",
+      "bad_kind": "rev",
+      "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:56:05+05:30",
+      "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "status": "calibrated"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/f17-stage1-upgrade.mjs",
+  "bad_target": "d2e3dfe",
+  "bad_kind": "rev",
+  "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:56:07+05:30",
+  "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 f17-stage1-upgrade | old token GET 200 {\"reservation_id\":\"res_1\",\"reference\":\"PLT53R\",\"restaurant_id\":\"r_anker\",\"table_id\":\"t_2\",\"party_size\":3,\"status\":\"confirmed\",\"starts_at_local\":\"2027-09-23T19:00\",\"starts_at\":\"2027-09-23T19:00:00+02:00\",\"ends_at\":\"2027-09-23T20:30:00+02:00\",\"created_at\":\"2026-10-05T13:26:06+00:00\"}; availability after upgrade {\"starts_at_local\":\"2027-09-23T19:00\",\"starts_at\":\"2027-09-23T19:00:00+02:00\",\"available_table_ids\":[\"t_1\"]}; cancel imported 200 {\"reservation_id\":\"res_1\",\"reference\":\"PLT53R\",\"restaurant_id\":\"r_anker\",\"table_id\":\"t_2\",\"party_size\":3,\"status\":\"cancelled\",\"starts_at_local\":\"2027-09-23T19:00\",\"starts_at\":\"2027-09-23T19:00:00+02:00\",\"ends_at\":\"2027-09-23T20:30:00+02:00\",\"created_at\":\"2026-10-05T13:26:06+00:00\"} | \"A stage-2 service must accept an export produced by the same team's stage-1 service.\"",
+  "good_output": "PASS S2 f17-stage1-upgrade | \"A stage-2 service must accept an export produced by the same team's stage-1 service.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/f17-stage1-upgrade.mjs",
+      "bad_target": "d2e3dfe",
+      "bad_kind": "rev",
+      "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:56:07+05:30",
+      "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "status": "calibrated"
+    }
+  ]
+}
