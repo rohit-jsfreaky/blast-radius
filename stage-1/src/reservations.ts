@@ -1,0 +1,4 @@
+// Owned by builder-b from WI1.4 on. Stub committed by builder-a so the skeleton runs.
+import type { Router } from "./router.ts";
+
+export function register(_router: Router): void {}
