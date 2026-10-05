@@ -165,7 +165,8 @@ export function renderSearch(root) {
         h("div", { class: "chips" }, cellFor([t.id], (s) => (s.available_table_ids || []).includes(t.id), `Table ${t.label}`))));
     const capOf = new Map(restaurant.tables.map((t) => [t.id, t.capacity]));
     const pairs = (restaurant.combinable || []).filter((p) => Array.isArray(p) && p.length === 2 && p.every((id) => capOf.has(id)))
-      .filter((p) => capOf.get(p[0]) + capOf.get(p[1]) >= params.party);
+      // A pair is offered when it can seat the party by the fixture, or when the API lists it (a published policy may change capacities).
+      .filter((p) => capOf.get(p[0]) + capOf.get(p[1]) >= params.party || slots.some((s) => (s.available_options || []).some((o) => Array.isArray(o.table_ids) && o.table_ids.length === 2 && sameSet(o.table_ids, p))));
     const pairRows = pairs.map((p) => {
       const name = tableWords(p.map((id) => labelOf.get(id)));
       const isFree = (s) => (s.available_options || []).some((o) => Array.isArray(o.table_ids) && o.table_ids.length === 2 && sameSet(o.table_ids, p));
