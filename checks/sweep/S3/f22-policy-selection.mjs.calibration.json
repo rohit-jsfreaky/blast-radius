@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S3/f22-policy-selection.mjs",
+  "bad_target": "dbc14c3",
+  "bad_kind": "rev",
+  "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:29:12+05:30",
+  "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "status": "calibrated",
+  "bad_output": "FAIL S3 f22-policy-selection | publish 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; first version not 1; publish 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; second version not 2; publish 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; third version not 3; before all: policy undefined; on 10-01: policy undefined; same-date tie: policy undefined want 2; later date: policy undefined want 2; booking terms undefined ends 2027-10-07T20:30:00+02:00; publish 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; NY late-evening booking took policy undefined, ends 2027-09-30T23:00:00-04:00; policies list {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}} | \"For a booking's **local start date**, choose the greatest `effective_from` not later than that date; ties choose the greatest `policy_version`.\"",
+  "good_output": "PASS S3 f22-policy-selection | \"For a booking's **local start date**, choose the greatest `effective_from` not later than that date; ties choose the greatest `policy_version`.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S3/f22-policy-selection.mjs",
+      "bad_target": "dbc14c3",
+      "bad_kind": "rev",
+      "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:29:12+05:30",
+      "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "status": "calibrated"
+    }
+  ]
+}

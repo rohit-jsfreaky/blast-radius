@@ -23,3 +23,15 @@ checks/sweep/S2/ui-out-of-order.py
 checks/sweep/S2/ui-testid-contract.py
 checks/sweep/S2/ui-uncertain-retry.py
 checks/sweep/S2/ui-upgrade-retry.py
+checks/sweep/S3/f10-upgrade-and-roundtrip.mjs
+checks/sweep/S3/f12-history-pairs.mjs
+checks/sweep/S3/f19-reservation-revision-history.mjs
+checks/sweep/S3/f19-restaurant-revision.mjs
+checks/sweep/S3/f20-terms-frozen.mjs
+checks/sweep/S3/f21-noop.mjs
+checks/sweep/S3/f22-policy-selection.mjs
+checks/sweep/S3/f3-new-idempotent-paths.mjs
+checks/sweep/S3/f5-owner-404.mjs
+checks/sweep/S3/f6-series-atomic.mjs
+checks/sweep/S3/inc-seed-stage3.mjs
+checks/sweep/S3/inc3-manager-unknown-user.mjs

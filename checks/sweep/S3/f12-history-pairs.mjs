@@ -1,0 +1,22 @@
+import { run, J, errs } from "./lib.mjs";
+await run("f12-history-pairs", "For a change involving a pair, use `table_ids` (complete before/after lists) instead of `table_id`.", async (call, h) => {
+  const e = errs();
+  const a = await h.book({ table_ids: ["t_2", "t_1"], starts_at_local: "2027-09-23T19:00", party_size: 4 });
+  let H = (await h.hist(a.b.reference)).b.entries;
+  e.check(J(H[0].changes[0]) === J({ field: "table_ids", from: null, to: ["t_1", "t_2"] }) && !H[0].changes.some((c) => c.field === "table_id"), `pair created ${J(H[0].changes)}`);
+  await h.patch(a.b.reference, { table_id: "t_3" });
+  H = (await h.hist(a.b.reference)).b.entries;
+  e.check(J(H[1]?.changes) === J([{ field: "table_ids", from: ["t_1", "t_2"], to: ["t_3"] }]), `pair->single ${J(H[1]?.changes)}`);
+  await h.patch(a.b.reference, { table_id: "t_2" });
+  H = (await h.hist(a.b.reference)).b.entries;
+  e.check(J(H[2]?.changes) === J([{ field: "table_id", from: "t_3", to: "t_2" }]), `single->single ${J(H[2]?.changes)}`);
+  await h.patch(a.b.reference, { table_ids: ["t_3", "t_2"] });
+  H = (await h.hist(a.b.reference)).b.entries;
+  e.check(J(H[3]?.changes) === J([{ field: "table_ids", from: ["t_2"], to: ["t_2", "t_3"] }]), `single->pair ${J(H[3]?.changes)}`);
+  const m = await h.moves([{ reference: a.b.reference, table_ids: ["t_1", "t_2"] }]);
+  H = (await h.hist(a.b.reference)).b.entries;
+  e.check(m.s === 201 && J(H[4]?.changes) === J([{ field: "table_ids", from: ["t_2", "t_3"], to: ["t_1", "t_2"] }]), `moves pair->pair ${m.s} ${J(H[4]?.changes)}`);
+  const s = await h.book({ table_id: "t_1", starts_at_local: "2027-09-23T12:00" });
+  e.check(J((await h.hist(s.b.reference)).b.entries[0].changes[0]) === J({ field: "table_id", from: null, to: "t_1" }), "single created uses table_id");
+  return e.result();
+});

@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S3/f10-upgrade-and-roundtrip.mjs",
+  "bad_target": "dbc14c3",
+  "bad_kind": "rev",
+  "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:28:55+05:30",
+  "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "status": "calibrated",
+  "bad_output": "FAIL S3 f10-upgrade-and-roundtrip | stage-1: imported booking 200 rev undefined terms undefined; stage-1: history of imported booking 404; stage-1: adoption on imported booking 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; stage-1: imported restaurant should have no managers (403), got 404; stage-1: cancel imported 200 rev undefined; stage-2: imported booking 200 rev undefined terms undefined; stage-2: history of imported booking 404; stage-2: adoption on imported booking 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; stage-2: imported restaurant should have no managers (403), got 404; stage-2: cancel imported 200 rev undefined; error Cannot read properties of undefined (reading '2') | \"A stage-3 service must accept exports produced by the same team's stage-1 or stage-2 service. Adoption must work on reservations imported this way.\"",
+  "good_output": "PASS S3 f10-upgrade-and-roundtrip | \"A stage-3 service must accept exports produced by the same team's stage-1 or stage-2 service. Adoption must work on reservations imported this way.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S3/f10-upgrade-and-roundtrip.mjs",
+      "bad_target": "dbc14c3",
+      "bad_kind": "rev",
+      "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:28:55+05:30",
+      "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "status": "calibrated"
+    }
+  ]
+}

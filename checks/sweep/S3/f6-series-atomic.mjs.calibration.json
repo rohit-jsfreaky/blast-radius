@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S3/f6-series-atomic.mjs",
+  "bad_target": "dbc14c3",
+  "bad_kind": "rev",
+  "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:29:20+05:30",
+  "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "status": "calibrated",
+  "bad_output": "FAIL S3 f6-series-atomic | conflicting occurrence 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; key reuse after failed adoption 404; already_in_series; occurrence under later policy capacity: 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; DST gap occurrence: 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; count 1: 404; count 13: 404; count bool: 404; interval 5: 404; interval 0: 404; cancelled anchor | \"No partial series, reservations, histories, counters or idempotency claim survive failure.\"",
+  "good_output": "PASS S3 f6-series-atomic | \"No partial series, reservations, histories, counters or idempotency claim survive failure.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S3/f6-series-atomic.mjs",
+      "bad_target": "dbc14c3",
+      "bad_kind": "rev",
+      "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:29:20+05:30",
+      "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "status": "calibrated"
+    }
+  ]
+}

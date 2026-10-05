@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S3/f19-reservation-revision-history.mjs",
+  "bad_target": "dbc14c3",
+  "bad_kind": "rev",
+  "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:29:00+05:30",
+  "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "status": "calibrated",
+  "bad_output": "FAIL S3 f19-reservation-revision-history | error Cannot read properties of undefined (reading 'map') | \"`seq` starts at 1 and increases by exactly 1\"",
+  "good_output": "PASS S3 f19-reservation-revision-history | \"`seq` starts at 1 and increases by exactly 1\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S3/f19-reservation-revision-history.mjs",
+      "bad_target": "dbc14c3",
+      "bad_kind": "rev",
+      "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:29:00+05:30",
+      "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "status": "calibrated"
+    }
+  ]
+}

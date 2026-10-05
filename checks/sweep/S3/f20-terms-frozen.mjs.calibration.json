@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S3/f20-terms-frozen.mjs",
+  "bad_target": "dbc14c3",
+  "bad_kind": "rev",
+  "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:29:07+05:30",
+  "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "status": "calibrated",
+  "bad_output": "FAIL S3 f20-terms-frozen | error Cannot read properties of undefined (reading 'length') | \"A policy publication does not change existing bookings, their end times, or their history.\"",
+  "good_output": "PASS S3 f20-terms-frozen | \"A policy publication does not change existing bookings, their end times, or their history.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S3/f20-terms-frozen.mjs",
+      "bad_target": "dbc14c3",
+      "bad_kind": "rev",
+      "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:29:07+05:30",
+      "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "status": "calibrated"
+    }
+  ]
+}

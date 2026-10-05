@@ -1,0 +1,46 @@
+{
+  "probe": "checks/sweep/S3/f19-restaurant-revision.mjs",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s3p-zfzE\\a",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:29:32+05:30",
+  "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+  "status": "calibrated",
+  "bad_output": "FAIL S3 f19-restaurant-revision | new booking: restaurant revision 0, want 1 (201); replay booking: restaurant revision 0, want 1 (200); failed booking (overlap): restaurant revision 0, want 1 (409); booking at other restaurant: restaurant revision 0, want 1 (201); no-op patch: restaurant revision 0, want 1 (200); failed patch: restaurant revision 0, want 1 (422); real patch: restaurant revision 0, want 2 (200); second booking: restaurant revision 0, want 3 (201); moves batch with two real changes: restaurant revision 0, want 4 (201); moves batch all no-op: restaurant revision 0, want 4 (201); failed moves: restaurant revision 0, want 4 (409); policy publication: restaurant revision 1, want 5 (201); policy replay: restaurant revision 1, want 5 (200); invalid policy: restaurant revision 1, want 5 (422); series adoption (3 occurrences): restaurant revision 2, want 6 (201); series replay: restaurant revision 2, want 6 (200); cancel: restaurant revision 2, want 7 (200); repeated cancel: restaurant revision 2, want 7 (200); export/import keeps it: restaurant revision 2, want 7 (undefined) | \"Adoption increments the restaurant revision once for the whole operation.\"",
+  "good_output": "PASS S3 f19-restaurant-revision | \"Adoption increments the restaurant revision once for the whole operation.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S3/f19-restaurant-revision.mjs",
+      "bad_target": "dbc14c3",
+      "bad_kind": "rev",
+      "bad_rev": "dbc14c3dbd91069c8672a4dcf010fad1cb03b4fe",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:29:04+05:30",
+      "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "status": "calibrated"
+    },
+    {
+      "probe": "checks/sweep/S3/f19-restaurant-revision.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s3p-zfzE\\a",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:29:32+05:30",
+      "git_rev": "542cd3988fadc42aa5b498ff1cd43fe8ecc7ec72",
+      "status": "calibrated"
+    }
+  ]
+}
