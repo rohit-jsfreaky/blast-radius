@@ -1,0 +1,45 @@
+{
+  "users": [
+    { "id": "u_ada", "email": "ada@example.com", "password": "correct horse", "display_name": "Ada" }
+  ],
+  "restaurants": [
+    {
+      "id": "r_anker", "name": "Zum Anker", "timezone": "Asia/Kolkata",
+      "slot_minutes": 30, "reservation_duration_minutes": 90, "cancellation_cutoff_minutes": 120,
+      "opening_hours": [
+        { "weekday": "mon", "opens": "18:00", "closes": "23:00" },
+        { "weekday": "tue", "opens": "18:00", "closes": "23:00" },
+        { "weekday": "wed", "opens": "18:00", "closes": "23:00" },
+        { "weekday": "thu", "opens": "18:00", "closes": "23:00" },
+        { "weekday": "fri", "opens": "18:00", "closes": "23:30" },
+        { "weekday": "sat", "opens": "17:00", "closes": "23:30" }
+      ],
+      "tables": [
+        { "id": "t_1", "label": "1", "capacity": 2 },
+        { "id": "t_2", "label": "2", "capacity": 4 },
+        { "id": "t_3", "label": "3", "capacity": 4 },
+        { "id": "t_4", "label": "4", "capacity": 6 }
+      ],
+      "combinable": [["t_2", "t_3"]]
+    },
+    {
+      "id": "r_lotus", "name": "Lotus Kitchen", "timezone": "Asia/Kolkata",
+      "slot_minutes": 30, "reservation_duration_minutes": 90, "cancellation_cutoff_minutes": 60,
+      "opening_hours": [
+        { "weekday": "mon", "opens": "12:00", "closes": "22:00" },
+        { "weekday": "tue", "opens": "12:00", "closes": "22:00" },
+        { "weekday": "wed", "opens": "12:00", "closes": "22:00" },
+        { "weekday": "thu", "opens": "12:00", "closes": "22:00" },
+        { "weekday": "fri", "opens": "12:00", "closes": "22:00" }
+      ],
+      "tables": [
+        { "id": "t_a", "label": "A", "capacity": 2 },
+        { "id": "t_b", "label": "B", "capacity": 4 }
+      ]
+    }
+  ],
+  "reservations": [
+    { "id": "res_1", "reference": "ANKER1", "user_id": "u_ada", "restaurant_id": "r_anker",
+      "table_id": "t_2", "party_size": 3, "starts_at_local": "2026-10-06T19:00" }
+  ]
+}

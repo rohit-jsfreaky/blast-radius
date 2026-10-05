@@ -1,0 +1,22 @@
+# Keeps the hosted demo (Render free tier) awake and seeded with the demo restaurants.
+# The service keeps state in memory, so after Render spins it down the restaurants are gone;
+# this re-seeds demo/fixture.json whenever the restaurant list comes back empty.
+name: keep-demo
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: wake and seed
+        run: |
+          URL=https://blast-radius-tablekeeper.onrender.com
+          for i in $(seq 1 12); do curl -sf "$URL/health" && break; sleep 10; done
+          if curl -s "$URL/restaurants" | grep -q '"restaurants":\[\]'; then
+            curl -s -o /dev/null -w "seeded %{http_code}\n" -X POST -H "Content-Type: application/json" --data @demo/fixture.json "$URL/_test/reset"
+          else
+            echo "already seeded"
+          fi

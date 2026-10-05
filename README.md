@@ -4,7 +4,7 @@
 there.** Built in BAND Desktop for the WeAreDevelopers × BAND Dark Factory hackathon, track
 **tablekeeper**, by Rohit Kashyap (solo).
 
-**[FACTORY.md](FACTORY.md) · [The numbers](#the-numbers) · [The best catch](#the-best-catch) · [Limits](#limits) · [room.json](room.json)**
+**[Live demo](https://blast-radius-tablekeeper.onrender.com) (log in: ada@example.com / correct horse; first load may take ~50 s) · [FACTORY.md](FACTORY.md) · [The numbers](#the-numbers) · [The best catch](#the-best-catch) · [Limits](#limits) · [room.json](room.json)**
 
 Most factories fix the one place a check found. But one sentence of the spec, one handoff or one
 shared function usually feeds many places, so the same mistake sits in the siblings until a hidden
