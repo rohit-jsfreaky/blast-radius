@@ -30,3 +30,4 @@ end:
 - 18:23 INC-1 closed (family 9, 5 failing, all fixed on d01c189). Waiting verifier full suite/official checks.
 - 18:28 STAGE 1 DONE rev 5014e13. 18:32 STAGE PLAN 2 + H2.1 (builder-a UI WI2.1-2.4) + H2.2 (builder-b API WI2.5-2.8) sent.
 - 18:31 READY H2.2 builder-b 8df6fc9. ledger L2.1-25 (602ef52); family map stage 2 (95471b0). Waiting READY H2.1 (UI).
+- 18:44 READY H2.1 builder-a f1e0296; builder-b f52bf75 (INC-1 risk applied). VERIFY H2.V1 sent.
