@@ -4,6 +4,7 @@ import { notFound, validation } from "./errors.ts";
 import { stateFromExport, stateFromFixture } from "./fixture.ts";
 import type { Router } from "./router.ts";
 import { registerPolicyRoutes, termsFor } from "./policies.ts";
+import { registerReplanRoutes } from "./replans.ts";
 import { registerSeriesRoutes } from "./series.ts";
 import { slotsOn } from "./schedule.ts";
 import { findOverlap, read, replaceState, restaurantById } from "./store.ts";
@@ -14,7 +15,7 @@ import { asObject, queryInt, queryString } from "./validate.ts";
 
 /** The restaurant as the fixture declared it: published policies, revisions and other stage-3 state never leak into the detail. */
 function fixtureConfig(r: Restaurant) {
-  const { policies: _p, revision: _v, manager_user_ids, ...config } = r;
+  const { policies: _p, revision: _v, closures: _c, manager_user_ids, ...config } = r;
   return manager_user_ids.length ? { ...config, manager_user_ids } : config;
 }
 
@@ -44,6 +45,7 @@ export function registerCoreRoutes(router: Router): void {
 
   registerPolicyRoutes(router);
   registerSeriesRoutes(router);
+  registerReplanRoutes(router);
 
   router.add("POST", "/auth/signup", { auth: false }, (ctx) => signup(ctx.jsonObject()));
   router.add("POST", "/auth/login", { auth: false }, (ctx) => login(ctx.jsonObject()));
