@@ -2,7 +2,7 @@
 // return a complete new State; nothing is touched until the caller swaps it in with replaceState().
 import { validation } from "./errors.ts";
 import { hashPassword } from "./auth.ts";
-import { emptyState, nowRfc3339, STATE_VERSION } from "./store.ts";
+import { emptyState, findOverlap, nowRfc3339, STATE_VERSION } from "./store.ts";
 import type { Receipt, Reservation, Restaurant, State, User } from "./store.ts";
 import { addMinutes, formatInstant, isValidZone, localToInstant, parseLocal } from "./time.ts";
 import { isInt, isObj } from "./validate.ts";
@@ -49,6 +49,28 @@ function parseRestaurant(raw: unknown): Restaurant {
   };
 }
 
+/** Cross-record invariants that reset and import must both hold (L1.1 no overlap, ids unique, references resolve). */
+function checkIntegrity(s: State): void {
+  const userIds = new Set<string>();
+  for (const u of s.users) { if (userIds.has(u.id)) bad("duplicate user id"); userIds.add(u.id); }
+  const restIds = new Set<string>();
+  for (const r of s.restaurants) {
+    if (restIds.has(r.id)) bad("duplicate restaurant id");
+    restIds.add(r.id);
+    const tids = new Set<string>();
+    for (const t of r.tables) { if (tids.has(t.id)) bad("duplicate table id within a restaurant"); tids.add(t.id); }
+  }
+  const placed: State = { ...s, reservations: [] };
+  for (const r of s.reservations) {
+    const rest = s.restaurants.find((q) => q.id === r.restaurant_id);
+    if (!rest) bad("reservation names an unknown restaurant");
+    if (!rest!.tables.some((t) => t.id === r.table_id)) bad("reservation names a table that is not at its restaurant");
+    if (!userIds.has(r.user_id)) bad("reservation names an unknown user");
+    if (r.status === "confirmed" && findOverlap(placed, r.restaurant_id, r.table_id, r.start_ms, r.end_ms)) bad("two confirmed reservations overlap on one table");
+    placed.reservations.push(r);
+  }
+}
+
 /** `fixture` -> a fresh State. Passwords are hashed (async) before anything is replaced. */
 export async function stateFromFixture(raw: unknown): Promise<State> {
   const fx = obj(raw, "fixture");
@@ -87,6 +109,7 @@ export async function stateFromFixture(raw: unknown): Promise<State> {
     if (s.reservations.some((q) => q.reference === res.reference || q.reservation_id === res.reservation_id)) bad("duplicate reservation reference or id");
     s.reservations.push(res);
   }
+  checkIntegrity(s);
   return s;
 }
 
@@ -135,5 +158,6 @@ export function stateFromExport(raw: unknown): State {
       bad(`idempotency receipt ${k.slice(0, 12)} is invalid`);
     }
   }
+  checkIntegrity(s);
   return s;
 }
