@@ -1,0 +1,60 @@
+{
+  "probe": "checks/sweep/S4/f2-closure-occupancy.mjs",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-ugNg\\p3",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:56:11+05:30",
+  "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "status": "calibrated",
+  "bad_output": "FAIL S4 f2-closure-occupancy | 18:00: t_2 listed while closed; 18:00: option with t_2 listed while closed [{\"table_ids\":[\"t_2\"],\"capacity\":4},{\"table_ids\":[\"t_3\"],\"capacity\":4},{\"table_ids\":[\"t_2\",\"t_3\"],\"capacity\":8}]; 18:00: explain t_2 {\"table_id\":\"t_2\",\"policy_version\":0,\"available\":true,\"rules\":[{\"rule\":\"capacity\",\"holds\":true},{\"rule\":\"no_overlap\",\"holds\":true}]}; 19:00: t_2 listed while closed; 19:00: option with t_2 listed while closed [{\"table_ids\":[\"t_2\"],\"capacity\":4},{\"table_ids\":[\"t_3\"],\"capacity\":4},{\"table_ids\":[\"t_2\",\"t_3\"],\"capacity\":8}]; 19:00: explain t_2 {\"table_id\":\"t_2\",\"policy_version\":0,\"available\":true,\"rules\":[{\"rule\":\"capacity\",\"holds\":true},{\"rule\":\"no_overlap\",\"holds\":true}]}; 20:30: t_2 listed while closed; 20:30: option with t_2 listed while closed [{\"table_ids\":[\"t_1\"],\"capacity\":2},{\"table_ids\":[\"t_2\"],\"capacity\":4},{\"table_ids\":[\"t_3\"],\"capacity\":4},{\"table_ids\":[\"t_1\",\"t_2\"],\"capacity\":6},{\"table_ids\":[\"t_2\",\"t_3\"],\"capacity\":8}]; 20:30: explain t_2 {\"table_id\":\"t_2\",\"policy_version\":0,\"available\":true,\"rules\":[{\"rule\":\"capacity\",\"holds\":true},{\"rule\":\"no_overlap\",\"holds\":true}]}; create single: 201 undefined; booking at closure end 409 | \"Closures thereafter exclude singles and pairs from availability and reject creates/amendments with 409 `table_unavailable`.\"",
+  "good_output": "PASS S4 f2-closure-occupancy | \"Closures thereafter exclude singles and pairs from availability and reject creates/amendments with 409 `table_unavailable`.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S4/f2-closure-occupancy.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-Dkie$2",
+      "bad_kind": "unknown",
+      "bad_rev": null,
+      "bad_result": "ERROR",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:54:30+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "uncalibrated"
+    },
+    {
+      "probe": "checks/sweep/S4/f2-closure-occupancy.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-4Jgz$pl",
+      "bad_kind": "unknown",
+      "bad_rev": null,
+      "bad_result": "ERROR",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:55:23+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "uncalibrated"
+    },
+    {
+      "probe": "checks/sweep/S4/f2-closure-occupancy.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-ugNg\\p3",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:56:11+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "calibrated"
+    }
+  ]
+}

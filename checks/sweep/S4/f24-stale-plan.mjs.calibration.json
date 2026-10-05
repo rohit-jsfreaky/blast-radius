@@ -1,0 +1,60 @@
+{
+  "probe": "checks/sweep/S4/f24-stale-plan.mjs",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-ugNg\\p4",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:56:17+05:30",
+  "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "status": "calibrated",
+  "bad_output": "FAIL S4 f24-stale-plan | new booking (201): apply 201 undefined, want stale_plan; new booking: stale apply changed reservations; real patch (200): apply 201 undefined, want stale_plan; real patch: stale apply changed reservations; cancel (200): apply 201 undefined, want stale_plan; cancel: stale apply changed reservations; moves batch (201): apply 201 undefined, want stale_plan; moves batch: stale apply changed reservations; series amend (201): apply 201 undefined, want stale_plan; series amend: stale apply changed reservations; other plan applied (201): apply 201 undefined, want stale_plan; other plan applied: stale apply changed reservations | \"Any intervening restaurant revision invalidates the plan: 409 `stale_plan`, changing nothing.\"",
+  "good_output": "PASS S4 f24-stale-plan | \"Any intervening restaurant revision invalidates the plan: 409 `stale_plan`, changing nothing.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S4/f24-stale-plan.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-Dkie$2",
+      "bad_kind": "unknown",
+      "bad_rev": null,
+      "bad_result": "ERROR",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:54:33+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "uncalibrated"
+    },
+    {
+      "probe": "checks/sweep/S4/f24-stale-plan.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-4Jgz$pl",
+      "bad_kind": "unknown",
+      "bad_rev": null,
+      "bad_result": "ERROR",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:55:26+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "uncalibrated"
+    },
+    {
+      "probe": "checks/sweep/S4/f24-stale-plan.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-ugNg\\p4",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:56:17+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "calibrated"
+    }
+  ]
+}

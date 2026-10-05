@@ -1,0 +1,60 @@
+{
+  "probe": "checks/sweep/S4/f23-considered-scope.mjs",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-ugNg\\p2",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:56:09+05:30",
+  "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "status": "calibrated",
+  "bad_output": "compared 7 plans, 0 infeasible, 4 applied (later previews saw prior closures), 0 over limit\nFAIL S4 f23-considered-scope | case 0.0 seed 20261005 closure {\"table\":\"t0\",\"from\":\"2027-09-23T17:00:00+02:00\",\"to\":\"2027-09-23T19:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":4},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":3},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":3},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":2},{\"id\":\"t4\",\"label\":\"T4\",\"capacity\":2}] pairs [[\"t0\",\"t3\"],[\"t2\",\"t0\"],[\"t0\",\"t4\"],[\"t2\",\"t1\"]] bookings [[\"DHGZKL\",\"confirmed\",4,[\"t2\",\"t0\"],\"18:30\",\"20:00\",{\"t0\":1,\"t1\":4,\"t2\":5,\"t3\":2,\"t4\":5}],[\"0A72LP\",\"confirmed\",1,[\"t1\"],\"16:30\",\"17:30\",{\"t0\":4,\"t1\":3,\"t2\":3,\"t3\":2,\"t4\":2}],[\"B2Z0Z8\",\"confirmed\",1,[\"t0\"],\"16:00\",\"17:00\",{\"t0\":4,\"t1\":3,\"t2\":3,\"t3\":2,\"t4\":2}]] | want [{\"reference\":\"0A72LP\",\"table_ids\":[\"t1\"],\"changed\":false},{\"reference\":\"B2Z0Z8\",\"table_ids\":[\"t3\"],\"changed\":true}] moved 1 unused 3 | got [{\"reference\":\"B2Z0Z8\",\"table_ids\":[\"t3\"],\"changed\":true}] moved 1 unused 1 || case 0.1 seed 20261005 closure {\"table\":\"t0\",\"from\":\"2027-09-23T19:00:00+02:00\",\"to\":\"2027-09-23T22:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":4},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":3},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":3},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":2},{\"id\":\"t4\",\"label\":\"T4\",\"capacity\":2}] pairs [[\"t0\",\"t3\"],[\"t2\",\"t0\"],[\"t0\",\"t4\"],[\"t2\",\"t1\"]] bookings [[\"DHGZKL\",\"confirmed\",4,[\"t2\",\"t0\"],\"18:30\",\"20:00\",{\"t0\":1,\"t1\":4,\"t2\":5,\"t3\":2,\"t4\":5}],[\"0A72LP\",\"confirmed\",1,[\"t1\"],\"16:30\",\"17:30\",{\"t0\":4,\"t1\":3,\"t2\":3,\"t3\":2,\"t4\":2}],[\"B2Z0Z8\",\"confirmed\",1,[\"t3\"],\"16:00\",\"17:00\",{\"t0\":4,\"t1\":3,\"t2\":3,\"t3\":2,\"t4\":2}]] | want [{\"reference\":\"0A72LP\",\"table_ids\":[\"t1\"],\"changed\":false},{\"reference\":\"DHGZKL\",\"table_ids\":[\"t1\"],\"changed\":true}] moved 1 unused 2 | got [{\"reference\":\"DHGZKL\",\"table_ids\":[\"t1\"],\"changed\":true}] moved 1 unused 0 || case 2.0 seed 20261005 closure {\"table\":\"t1\",\"from\":\"2027-09-23T18:30:00+02:00\",\"to\":\"2027-09-23T19:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":3},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":3},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":6}] pairs [] bookings [[\"BZP6G9\",\"confirmed\",3,[\"t1\"],\"19:30\",\"20:30\",{\"t0\":1,\"t1\":3,\"t2\":1}],[\"F4SNOV\",\"confirmed\",3,[\"t1\"],\"16:00\",\"17:00\",{\"t0\":3,\"t1\":3,\"t2\":6}],[\"WBEI84\",\"confirmed\",2,[\"t0\"],\"16:00\",\"17:00\",{\"t0\":3,\"t1\":3,\"t2\":6}]] | want [{\"reference\":\"F4SNOV\",\"table_ids\":[\"t2\"],\"changed\":true},{\"reference\":\"WBEI84\",\"table_ids\":[\"t0\"],\"changed\":false}] moved 1 unused 4 | got [{\"reference\":\"F4SNOV\",\"table_ids\":[\"t2\"],\"changed\":true}] moved 1 unused 3 || case 2.1 seed 20261005 closure {\"table\":\"t0\",\"from\":\"2027-09-23T21:00:00+02:00\",\"to\":\"2027-09-23T22:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":3},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":3},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":6}] pairs [] bookings [[\"BZP6G9\",\"confirmed\",3,[\"t1\"],\"19:30\",\"20:30\",{\"t0\":1,\"t1\":3,\"t2\":1}],[\"F4SNOV\",\"confirmed\",3,[\"t2\"],\"16:00\",\"17:00\",{\"t0\":3,\"t1\":3,\"t2\":6}],[\"WBEI84\",\"confirmed\",2,[\"t0\"],\"16:00\",\"17:00\",{\"t0\":3,\"t1\":3,\"t2\":6}]] | want [{\"reference\":\"BZP6G9\",\"table_ids\":[\"t1\"],\"changed\":false}] moved 0 unused 0 | got [] moved 0 unused 0 || case 3.0 seed 20261005 closure {\"table\":\"t2\",\"from\":\"2027-09-23T17:30:00+02:00\",\"to\":\"2027-09-23T18:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":3},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":1},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":1},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":5},{\"id\":\"t4\",\"label\":\"T4\",\"capacity\":5}] pairs [[\"t2\",\"t1\"],[\"t4\",\"t0\"],[\"t3\",\"t1\"],[\"t0\",\"t1\"]] bookings [[\"W7MNS2\",\"confirmed\",4,[\"t3\"],\"19:00\",\"20:00\",{\"t0\":3,\"t1\":1,\"t2\":1,\"t3\":5,\"t4\":5}],[\"9SQFWV\",\"confirmed\",3,[\"t2\"],\"18:30\",\"19:30\",{\"t0\":1,\"t1\":1,\"t2\":5,\"t3\":4,\"t4\":3}],[\"O6KO8Z\",\"confirmed\",3,[\"t3\"],\"15:30\",\"16:30\",{\"t0\":3,\"t1\":1,\"t2\":1,\"t3\":5,\"t4\":5}]] | want [{\"reference\":\"O6KO8Z\",\"table_ids\":[\"t3\"],\"changed\":false}] moved 0 unused 2 | got [] moved 0 unused 0 | \"Consider every confirmed booking at this restaurant overlapping that interval.\"",
+  "good_output": "compared 89 plans, 5 infeasible, 50 applied (later previews saw prior closures), 0 over limit\nPASS S4 f23-considered-scope | \"Consider every confirmed booking at this restaurant overlapping that interval.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S4/f23-considered-scope.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-Dkie$2",
+      "bad_kind": "unknown",
+      "bad_rev": null,
+      "bad_result": "ERROR",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:54:45+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "uncalibrated"
+    },
+    {
+      "probe": "checks/sweep/S4/f23-considered-scope.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-4Jgz$pl",
+      "bad_kind": "unknown",
+      "bad_rev": null,
+      "bad_result": "ERROR",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:55:21+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "uncalibrated"
+    },
+    {
+      "probe": "checks/sweep/S4/f23-considered-scope.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-ugNg\\p2",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:56:09+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "calibrated"
+    }
+  ]
+}

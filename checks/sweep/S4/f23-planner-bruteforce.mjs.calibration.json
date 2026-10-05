@@ -1,0 +1,60 @@
+{
+  "probe": "checks/sweep/S4/f23-planner-bruteforce.mjs",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-ugNg\\p1",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:55:59+05:30",
+  "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "status": "calibrated",
+  "bad_output": "compared 16 plans, 1 infeasible, 11 applied (later previews saw prior closures), 0 over limit\nFAIL S4 f23-planner-bruteforce | case 0.0 seed 20261005 closure {\"table\":\"t0\",\"from\":\"2027-09-23T17:00:00+02:00\",\"to\":\"2027-09-23T19:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":4},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":3},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":3},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":2},{\"id\":\"t4\",\"label\":\"T4\",\"capacity\":2}] pairs [[\"t0\",\"t3\"],[\"t2\",\"t0\"],[\"t0\",\"t4\"],[\"t2\",\"t1\"]] bookings [[\"QC4IFN\",\"confirmed\",4,[\"t2\",\"t0\"],\"18:30\",\"20:00\",{\"t0\":1,\"t1\":4,\"t2\":5,\"t3\":2,\"t4\":5}],[\"Q0YB24\",\"confirmed\",1,[\"t1\"],\"16:30\",\"17:30\",{\"t0\":4,\"t1\":3,\"t2\":3,\"t3\":2,\"t4\":2}],[\"EHIMMA\",\"confirmed\",1,[\"t0\"],\"16:00\",\"17:00\",{\"t0\":4,\"t1\":3,\"t2\":3,\"t3\":2,\"t4\":2}]] | want [{\"reference\":\"EHIMMA\",\"table_ids\":[\"t3\"],\"changed\":true},{\"reference\":\"Q0YB24\",\"table_ids\":[\"t1\"],\"changed\":false}] moved 1 unused 3 | got [{\"reference\":\"EHIMMA\",\"table_ids\":[\"t2\"],\"changed\":true},{\"reference\":\"Q0YB24\",\"table_ids\":[\"t1\"],\"changed\":false}] moved 1 unused 4 || case 0.1 seed 20261005 closure {\"table\":\"t0\",\"from\":\"2027-09-23T19:00:00+02:00\",\"to\":\"2027-09-23T22:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":4},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":3},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":3},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":2},{\"id\":\"t4\",\"label\":\"T4\",\"capacity\":2}] pairs [[\"t0\",\"t3\"],[\"t2\",\"t0\"],[\"t0\",\"t4\"],[\"t2\",\"t1\"]] bookings [[\"QC4IFN\",\"confirmed\",4,[\"t2\",\"t0\"],\"18:30\",\"20:00\",{\"t0\":1,\"t1\":4,\"t2\":5,\"t3\":2,\"t4\":5}],[\"Q0YB24\",\"confirmed\",1,[\"t1\"],\"16:30\",\"17:30\",{\"t0\":4,\"t1\":3,\"t2\":3,\"t3\":2,\"t4\":2}],[\"EHIMMA\",\"confirmed\",1,[\"t2\"],\"16:00\",\"17:00\",{\"t0\":4,\"t1\":3,\"t2\":3,\"t3\":2,\"t4\":2}]] | want [{\"reference\":\"Q0YB24\",\"table_ids\":[\"t1\"],\"changed\":false},{\"reference\":\"QC4IFN\",\"table_ids\":[\"t1\"],\"changed\":true}] moved 1 unused 2 | got [{\"reference\":\"Q0YB24\",\"table_ids\":[\"t1\"],\"changed\":false},{\"reference\":\"QC4IFN\",\"table_ids\":[\"t2\",\"t1\"],\"changed\":true}] moved 1 unused 7 || case 4.0 seed 20261005 closure {\"table\":\"t5\",\"from\":\"2027-09-23T18:00:00+02:00\",\"to\":\"2027-09-23T20:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":4},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":6},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":2},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":4},{\"id\":\"t4\",\"label\":\"T4\",\"capacity\":3},{\"id\":\"t5\",\"label\":\"T5\",\"capacity\":3}] pairs [[\"t4\",\"t0\"],[\"t1\",\"t5\"],[\"t0\",\"t3\"]] bookings [[\"XN2XTE\",\"confirmed\",2,[\"t4\"],\"19:30\",\"21:00\",{\"t0\":5,\"t1\":5,\"t2\":3,\"t3\":2,\"t4\":6,\"t5\":5}],[\"LXDX6R\",\"confirmed\",1,[\"t2\"],\"19:00\",\"20:00\",{\"t0\":4,\"t1\":6,\"t2\":2,\"t3\":4,\"t4\":3,\"t5\":3}],[\"46L3Y5\",\"confirmed\",1,[\"t5\"],\"18:30\",\"20:00\",{\"t0\":5,\"t1\":5,\"t2\":3,\"t3\":2,\"t4\":6,\"t5\":5}],[\"QTYX6N\",\"confirmed\",4,[\"t3\"],\"17:30\",\"18:30\",{\"t0\":4,\"t1\":6,\"t2\":2,\"t3\":4,\"t4\":3,\"t5\":3}],[\"8MDUSW\",\"confirmed\",1,[\"t1\",\"t5\"],\"17:00\",\"18:00\",{\"t0\":4,\"t1\":6,\"t2\":2,\"t3\":4,\"t4\":3,\"t5\":3}]] | want [{\"reference\":\"8MDUSW\",\"table_ids\":[\"t2\"],\"changed\":true},{\"reference\":\"QTYX6N\",\"table_ids\":[\"t3\"],\"changed\":false}] moved 1 unused 1 | got [{\"reference\":\"8MDUSW\",\"table_ids\":[\"t4\",\"t0\"],\"changed\":true},{\"reference\":\"QTYX6N\",\"table_ids\":[\"t3\"],\"changed\":false}] moved 1 unused 6 || case 4.1 seed 20261005 closure {\"table\":\"t0\",\"from\":\"2027-09-23T19:00:00+02:00\",\"to\":\"2027-09-23T21:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":4},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":6},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":2},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":4},{\"id\":\"t4\",\"label\":\"T4\",\"capacity\":3},{\"id\":\"t5\",\"label\":\"T5\",\"capacity\":3}] pairs [[\"t4\",\"t0\"],[\"t1\",\"t5\"],[\"t0\",\"t3\"]] bookings [[\"XN2XTE\",\"confirmed\",2,[\"t4\"],\"19:30\",\"21:00\",{\"t0\":5,\"t1\":5,\"t2\":3,\"t3\":2,\"t4\":6,\"t5\":5}],[\"LXDX6R\",\"confirmed\",1,[\"t2\"],\"19:00\",\"20:00\",{\"t0\":4,\"t1\":6,\"t2\":2,\"t3\":4,\"t4\":3,\"t5\":3}],[\"46L3Y5\",\"confirmed\",1,[\"t5\"],\"18:30\",\"20:00\",{\"t0\":5,\"t1\":5,\"t2\":3,\"t3\":2,\"t4\":6,\"t5\":5}],[\"QTYX6N\",\"confirmed\",4,[\"t3\"],\"17:30\",\"18:30\",{\"t0\":4,\"t1\":6,\"t2\":2,\"t3\":4,\"t4\":3,\"t5\":3}],[\"8MDUSW\",\"confirmed\",1,[\"t4\",\"t0\"],\"17:00\",\"18:00\",{\"t0\":4,\"t1\":6,\"t2\":2,\"t3\":4,\"t4\":3,\"t5\":3}]] | want [{\"reference\":\"46L3Y5\",\"table_ids\":[\"t5\"],\"changed\":false},{\"reference\":\"8MDUSW\",\"table_ids\":[\"t2\"],\"changed\":true},{\"reference\":\"QTYX6N\",\"table_ids\":[\"t3\"],\"changed\":false}] moved 1 unused 5 | got [{\"reference\":\"46L3Y5\",\"table_ids\":[\"t5\"],\"changed\":false},{\"reference\":\"8MDUSW\",\"table_ids\":[\"t1\"],\"changed\":true},{\"reference\":\"QTYX6N\",\"table_ids\":[\"t3\"],\"changed\":false}] moved 1 unused 9 || case 8.0 seed 20261005 closure {\"table\":\"t2\",\"from\":\"2027-09-23T20:00:00+02:00\",\"to\":\"2027-09-23T21:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":5},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":2},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":3},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":5}] pairs [[\"t2\",\"t0\"]] bookings [[\"1W7MJD\",\"confirmed\",3,[\"t2\"],\"19:30\",\"21:00\",{\"t0\":4,\"t1\":4,\"t2\":6,\"t3\":1}],[\"4NVZLG\",\"confirmed\",4,[\"t0\"],\"19:30\",\"20:30\",{\"t0\":5,\"t1\":2,\"t2\":3,\"t3\":5}],[\"WBFF09\",\"confirmed\",1,[\"t2\",\"t0\"],\"18:30\",\"19:30\",{\"t0\":5,\"t1\":2,\"t2\":3,\"t3\":5}],[\"CD0A5Q\",\"confirmed\",1,[\"t2\"],\"17:00\",\"18:00\",{\"t0\":5,\"t1\":2,\"t2\":3,\"t3\":5}],[\"TRJVVD\",\"confirmed\",2,[\"t0\"],\"16:00\",\"17:00\",{\"t0\":5,\"t1\":2,\"t2\":3,\"t3\":5}],[\"D1SOEP\",\"confirmed\",3,[\"t2\"],\"15:30\",\"17:00\",{\"t0\":4,\"t1\":4,\"t2\":6,\"t3\":1}]] | want [{\"reference\":\"WBFF09\",\"table_ids\":[\"t1\"],\"changed\":true}] moved 1 unused 1 | got [{\"reference\":\"WBFF09\",\"table_ids\":[\"t0\"],\"changed\":true}] moved 1 unused 4 || case 8.1 seed 20261005 closure {\"table\":\"t2\",\"from\":\"2027-09-23T19:30:00+02:00\",\"to\":\"2027-09-23T20:00:00+02:00\"}: tables [{\"id\":\"t0\",\"label\":\"T0\",\"capacity\":5},{\"id\":\"t1\",\"label\":\"T1\",\"capacity\":2},{\"id\":\"t2\",\"label\":\"T2\",\"capacity\":3},{\"id\":\"t3\",\"label\":\"T3\",\"capacity\":5}] pairs [[\"t2\",\"t0\"]] bookings [[\"1W7MJD\",\"confirmed\",3,[\"t2\"],\"19:30\",\"21:00\",{\"t0\":4,\"t1\":4,\"t2\":6,\"t3\":1}],[\"4NVZLG\",\"confirmed\",4,[\"t0\"],\"19:30\",\"20:30\",{\"t0\":5,\"t1\":2,\"t2\":3,\"t3\":5}],[\"WBFF09\",\"confirmed\",1,[\"t0\"],\"18:30\",\"19:30\",{\"t0\":5,\"t1\":2,\"t2\":3,\"t3\":5}],[\"CD0A5Q\",\"confirmed\",1,[\"t2\"],\"17:00\",\"18:00\",{\"t0\":5,\"t1\":2,\"t2\":3,\"t3\":5}],[\"TRJVVD\",\"confirmed\",2,[\"t0\"],\"16:00\",\"17:00\",{\"t0\":5,\"t1\":2,\"t2\":3,\"t3\":5}],[\"D1SOEP\",\"confirmed\",3,[\"t2\"],\"15:30\",\"17:00\",{\"t0\":4,\"t1\":4,\"t2\":6,\"t3\":1}]] | want [{\"reference\":\"CD0A5Q\",\"table_ids\":[\"t1\"],\"changed\":true}] moved 1 unused 1 | got [{\"reference\":\"CD0A5Q\",\"table_ids\":[\"t0\"],\"changed\":true}] moved 1 unused 4 | \"Among feasible plans minimize, in order:\"",
+  "good_output": "compared 89 plans, 5 infeasible, 50 applied (later previews saw prior closures), 0 over limit\nPASS S4 f23-planner-bruteforce | \"Among feasible plans minimize, in order:\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S4/f23-planner-bruteforce.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-Dkie$2",
+      "bad_kind": "unknown",
+      "bad_rev": null,
+      "bad_result": "ERROR",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:54:29+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "uncalibrated"
+    },
+    {
+      "probe": "checks/sweep/S4/f23-planner-bruteforce.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-4Jgz$pl",
+      "bad_kind": "unknown",
+      "bad_rev": null,
+      "bad_result": "ERROR",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:55:13+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "uncalibrated"
+    },
+    {
+      "probe": "checks/sweep/S4/f23-planner-bruteforce.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s4p-ugNg\\p1",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:55:59+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "calibrated"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S4/series-amend.mjs",
+  "bad_target": "7a11ec7",
+  "bad_kind": "rev",
+  "bad_rev": "7a11ec7f68c5e0580eb4a79f3b73b150c690f643",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:54:53+05:30",
+  "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "status": "calibrated",
+  "bad_output": "FAIL S4 series-amend | revision 0: 404 not_found; bool index: 404 not_found; index = count: 404 not_found; 24:00: 404 not_found; 9:00: 404 not_found; seconds: 404 not_found; stale beats invalid time: 404 not_found; no token not 401; amend 404 rev undefined {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; occ1 2027-09-09T19:00 rev 1; occ4 2027-09-30T19:00; restaurant revision 4 want 5; occ1 history {\"seq\":1,\"at\":\"2026-10-05T16:24:51+02:00\",\"event\":\"created\",\"changes\":[{\"field\":\"table_id\",\"from\":null,\"to\":\"t_2\"},{\"field\":\"starts_at_local\",\"from\":null,\"to\":\"2027-09-09T19:00\"},{\"field\":\"party_size\",\"from\":null,\"to\":2}],\"revision\":1,\"accepted_terms\":{\"policy_version\":0,\"slot_minutes\":30,\"reservation_duration_minutes\":90,\"cancellation_cutoff_minutes\":120,\"opening_hours\":[{\"weekday\":\"mon\",\"opens\":\"00:00\",\"closes\":\"23:00\"},{\"weekday\":\"tue\",\"opens\":\"00:00\",\"closes\":\"23:00\"},{\"weekday\":\"wed\",\"opens\":\"00:00\",\"closes\":\"23:00\"},{\"weekday\":\"thu\",\"opens\":\"00:00\",\"closes\":\"23:00\"},{\"weekday\":\"fri\",\"opens\":\"00:00\",\"closes\":\"23:00\"},{\"weekday\":\"sat\",\"opens\":\"00:00\",\"closes\":\"23:00\"},{\"weekday\":\"sun\",\"opens\":\"00:00\",\"closes\":\"23:00\"}],\"capacities\":{\"t_1\":2,\"t_2\":4,\"t_3\":4}}}; replay 404; all-no-op changed revisions 4->4; conflict 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; failed key reusable 404; DST gap 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; resulting-date policy 404 {\"error\":{\"code\":\"not_found\",\"message\":\"no such route\"}}; concurrent amends [404,404,404,404] | \"Consider indices at or after from_index, excluding cancelled occurrences and those marked exception. Change their clock time on their original scheduled local dates\"",
+  "good_output": "PASS S4 series-amend | \"Consider indices at or after from_index, excluding cancelled occurrences and those marked exception. Change their clock time on their original scheduled local dates\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S4/series-amend.mjs",
+      "bad_target": "7a11ec7",
+      "bad_kind": "rev",
+      "bad_rev": "7a11ec7f68c5e0580eb4a79f3b73b150c690f643",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:54:53+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "calibrated"
+    }
+  ]
+}

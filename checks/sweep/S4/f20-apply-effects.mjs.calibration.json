@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S4/f20-apply-effects.mjs",
+  "bad_target": "7a11ec7",
+  "bad_kind": "rev",
+  "bad_rev": "7a11ec7f68c5e0580eb4a79f3b73b150c690f643",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:54:50+05:30",
+  "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "status": "calibrated",
+  "bad_output": "FAIL S4 f20-apply-effects | error TypeError: Cannot read properties of undefined (reading 'map')     at file:///D:/my_projects/hackathons/blast-radius/band-work/result3/checks/sweep/S4/f20-apply-effects.mjs:25:31 | \"Each moved booking increments its revision once and gains one `reassigned` history entry with a `table_ids` change and `plan_id`; accepted terms and times remain identical.\"",
+  "good_output": "PASS S4 f20-apply-effects | \"Each moved booking increments its revision once and gains one `reassigned` history entry with a `table_ids` change and `plan_id`; accepted terms and times remain identical.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S4/f20-apply-effects.mjs",
+      "bad_target": "7a11ec7",
+      "bad_kind": "rev",
+      "bad_rev": "7a11ec7f68c5e0580eb4a79f3b73b150c690f643",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:54:50+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "calibrated"
+    }
+  ]
+}

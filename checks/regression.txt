@@ -35,3 +35,11 @@ checks/sweep/S3/f5-owner-404.mjs
 checks/sweep/S3/f6-series-atomic.mjs
 checks/sweep/S3/inc-seed-stage3.mjs
 checks/sweep/S3/inc3-manager-unknown-user.mjs
+checks/sweep/S4/f10-import-stage4.mjs
+checks/sweep/S4/f2-closure-occupancy.mjs
+checks/sweep/S4/f20-apply-effects.mjs
+checks/sweep/S4/f23-considered-scope.mjs
+checks/sweep/S4/f23-planner-bruteforce.mjs
+checks/sweep/S4/f24-stale-plan.mjs
+checks/sweep/S4/f3-replan-paths.mjs
+checks/sweep/S4/series-amend.mjs

@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S4/f3-replan-paths.mjs",
+  "bad_target": "7a11ec7",
+  "bad_kind": "rev",
+  "bad_rev": "7a11ec7f68c5e0580eb4a79f3b73b150c690f643",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:54:48+05:30",
+  "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+  "status": "calibrated",
+  "bad_output": "FAIL S4 f3-replan-paths | error TypeError: Cannot read properties of undefined (reading 'length')     at file:///D:/my_projects/hackathons/blast-radius/band-work/result3/checks/sweep/S4/f3-replan-paths.mjs:21:69 | \"A plan already applied under a different key gives 409 `plan_already_applied`; replay of the successful key returns the original response with 200, even after later changes.\"",
+  "good_output": "PASS S4 f3-replan-paths | \"A plan already applied under a different key gives 409 `plan_already_applied`; replay of the successful key returns the original response with 200, even after later changes.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S4/f3-replan-paths.mjs",
+      "bad_target": "7a11ec7",
+      "bad_kind": "rev",
+      "bad_rev": "7a11ec7f68c5e0580eb4a79f3b73b150c690f643",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:54:48+05:30",
+      "git_rev": "a57124fde0ceee98769e7a704067cf0dc5e24ab3",
+      "status": "calibrated"
+    }
+  ]
+}
