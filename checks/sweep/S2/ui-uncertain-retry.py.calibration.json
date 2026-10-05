@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/ui-uncertain-retry.py",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s2-plant-GsB9\\b",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:59:53+05:30",
+  "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 ui-uncertain-retry | error Locator.wait_for: Timeout 5000ms exceeded. | \"If a booking response is lost, including after the booking commits, show nonempty `booking-uncertain` text, without `booking-error` or a new confirmation. The unchanged form must retry with the same idempotency key and body.\"",
+  "good_output": "PASS S2 ui-uncertain-retry | \"If a booking response is lost, including after the booking commits, show nonempty `booking-uncertain` text, without `booking-error` or a new confirmation. The unchanged form must retry with the same idempotency key and body.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/ui-uncertain-retry.py",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s2-plant-GsB9\\b",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:59:53+05:30",
+      "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "status": "calibrated"
+    }
+  ]
+}

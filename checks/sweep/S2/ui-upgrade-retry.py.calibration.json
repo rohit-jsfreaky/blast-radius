@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/ui-upgrade-retry.py",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s2-plant-GsB9\\b",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:00:10+05:30",
+  "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 ui-upgrade-retry | error Locator.wait_for: Timeout 5000ms exceeded. | \"A booking whose response was lost before export remains retryable after import with the same body and key; the UI must recover the original confirmation.\"",
+  "good_output": "PASS S2 ui-upgrade-retry | \"A booking whose response was lost before export remains retryable after import with the same body and key; the UI must recover the original confirmation.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/ui-upgrade-retry.py",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s2-plant-GsB9\\b",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:00:10+05:30",
+      "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "status": "calibrated"
+    }
+  ]
+}

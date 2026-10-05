@@ -17,3 +17,9 @@ checks/sweep/S2/f8-table-id-shape.mjs
 checks/sweep/S2/f9-pair-rules.mjs
 checks/sweep/S2/inc1-seed-capacity.mjs
 checks/sweep/S2/inc1-seed-pairs.mjs
+checks/sweep/S2/ui-375-no-hscroll.py
+checks/sweep/S2/ui-409-preserve.py
+checks/sweep/S2/ui-out-of-order.py
+checks/sweep/S2/ui-testid-contract.py
+checks/sweep/S2/ui-uncertain-retry.py
+checks/sweep/S2/ui-upgrade-retry.py

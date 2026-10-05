@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/ui-409-preserve.py",
+  "bad_target": "d2e3dfe",
+  "bad_kind": "rev",
+  "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:01:28+05:30",
+  "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 ui-409-preserve | error Locator.fill: Timeout 30000ms exceeded. | \"If another client takes a table after the form opens, a `409 table_unavailable` response shows `booking-error` and refreshes availability. Preserve the selected form and its inputs\"",
+  "good_output": "PASS S2 ui-409-preserve | \"If another client takes a table after the form opens, a `409 table_unavailable` response shows `booking-error` and refreshes availability. Preserve the selected form and its inputs\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/ui-409-preserve.py",
+      "bad_target": "d2e3dfe",
+      "bad_kind": "rev",
+      "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:01:28+05:30",
+      "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "status": "calibrated"
+    }
+  ]
+}

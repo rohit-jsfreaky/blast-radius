@@ -4,15 +4,15 @@
   "bad_kind": "rev",
   "bad_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
   "bad_result": "FAIL",
-  "good_target": "",
-  "good_kind": "",
-  "good_rev": null,
-  "good_result": "",
-  "time": "2026-10-05T18:55:39+05:30",
-  "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+  "good_target": "73657b4",
+  "good_kind": "rev",
+  "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:59:24+05:30",
+  "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
   "status": "calibrated",
   "bad_output": "FAIL S2 inc1-seed-capacity | reset single t_1 (cap 2) party 3: 204; reset single via table_ids t_1 party 3: 204; reset pair t_1+t_2 (cap 6) party 7: 204; import pair party 7: 204 | \"`capacity` | Table | Maximum party size\"",
-  "good_output": "",
+  "good_output": "PASS S2 inc1-seed-capacity | \"`capacity` | Table | Maximum party size\"",
   "history": [
     {
       "probe": "checks/sweep/S2/inc1-seed-capacity.mjs",
@@ -26,6 +26,20 @@
       "good_result": "",
       "time": "2026-10-05T18:55:39+05:30",
       "git_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "status": "calibrated"
+    },
+    {
+      "probe": "checks/sweep/S2/inc1-seed-capacity.mjs",
+      "bad_target": "64f99e9",
+      "bad_kind": "rev",
+      "bad_rev": "64f99e9dff37c51b857bceaf74701aae39c1b80d",
+      "bad_result": "FAIL",
+      "good_target": "73657b4",
+      "good_kind": "rev",
+      "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:59:24+05:30",
+      "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
       "status": "calibrated"
     }
   ]

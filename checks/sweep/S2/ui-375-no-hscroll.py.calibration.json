@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/ui-375-no-hscroll.py",
+  "bad_target": "d2e3dfe",
+  "bad_kind": "rev",
+  "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "good_result": "PASS",
+  "time": "2026-10-05T19:00:50+05:30",
+  "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 ui-375-no-hscroll | error Locator.fill: Timeout 30000ms exceeded. | \"The required flows must remain clear and usable at a 375 CSS-pixel viewport and at conventional desktop widths, without horizontal page scrolling.\"",
+  "good_output": "PASS S2 ui-375-no-hscroll | \"The required flows must remain clear and usable at a 375 CSS-pixel viewport and at conventional desktop widths, without horizontal page scrolling.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/ui-375-no-hscroll.py",
+      "bad_target": "d2e3dfe",
+      "bad_kind": "rev",
+      "bad_rev": "d2e3dfeb1c1df121a1316749bccec7a14cb12dab",
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "good_result": "PASS",
+      "time": "2026-10-05T19:00:50+05:30",
+      "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "status": "calibrated"
+    }
+  ]
+}

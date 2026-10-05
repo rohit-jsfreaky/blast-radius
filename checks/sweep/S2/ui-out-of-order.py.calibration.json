@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/S2/ui-out-of-order.py",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s2-plant-GsB9\\a",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:59:35+05:30",
+  "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+  "status": "calibrated",
+  "bad_output": "FAIL S2 ui-out-of-order | single t_1 shown available: late party-1 answer painted over party-5; booking-party-size '1', want 5 (from search B) | \"If search A starts before search B but finishes after it, the grid, table labels and booking form must describe B. A late response must not restore A's results.\"",
+  "good_output": "PASS S2 ui-out-of-order | \"If search A starts before search B but finishes after it, the grid, table labels and booking form must describe B. A late response must not restore A's results.\"",
+  "history": [
+    {
+      "probe": "checks/sweep/S2/ui-out-of-order.py",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\s2-plant-GsB9\\a",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:59:35+05:30",
+      "git_rev": "73657b45c2c51fdf91c4f75e64b3f6497b6d1861",
+      "status": "calibrated"
+    }
+  ]
+}
