@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/INC-1/seed-unknown-user.mjs",
+  "bad_target": "16984d6",
+  "bad_kind": "rev",
+  "bad_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+  "bad_result": "FAIL",
+  "good_target": "",
+  "good_kind": "",
+  "good_rev": null,
+  "good_result": "",
+  "time": "2026-10-05T18:21:20+05:30",
+  "git_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+  "status": "calibrated",
+  "bad_output": "FAIL INC-1 seed-unknown-user | reset returned 204, want 4xx (fixture violates the invariant) | \"`reservations` may seed confirmed bookings, with the same fields as a `POST /reservations` body plus `id`, `reference` and `user_id`.\"",
+  "good_output": "",
+  "history": [
+    {
+      "probe": "checks/sweep/INC-1/seed-unknown-user.mjs",
+      "bad_target": "16984d6",
+      "bad_kind": "rev",
+      "bad_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+      "bad_result": "FAIL",
+      "good_target": "",
+      "good_kind": "",
+      "good_rev": null,
+      "good_result": "",
+      "time": "2026-10-05T18:21:20+05:30",
+      "git_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+      "status": "calibrated"
+    }
+  ]
+}

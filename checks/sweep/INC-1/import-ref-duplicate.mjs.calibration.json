@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/INC-1/import-ref-duplicate.mjs",
+  "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\inc1-plant-ioaa",
+  "bad_kind": "folder",
+  "bad_rev": null,
+  "bad_result": "FAIL",
+  "good_target": "HEAD",
+  "good_kind": "rev",
+  "good_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:21:26+05:30",
+  "git_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+  "status": "calibrated",
+  "bad_output": "FAIL INC-1 import-ref-duplicate | import returned 204, want 422 validation_failed | \"unique across all reservations\"",
+  "good_output": "PASS INC-1 import-ref-duplicate | \"unique across all reservations\"",
+  "history": [
+    {
+      "probe": "checks/sweep/INC-1/import-ref-duplicate.mjs",
+      "bad_target": "C:\\Users\\yoges\\AppData\\Local\\Temp\\inc1-plant-ioaa",
+      "bad_kind": "folder",
+      "bad_rev": null,
+      "bad_result": "FAIL",
+      "good_target": "HEAD",
+      "good_kind": "rev",
+      "good_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:21:26+05:30",
+      "git_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+      "status": "calibrated"
+    }
+  ]
+}

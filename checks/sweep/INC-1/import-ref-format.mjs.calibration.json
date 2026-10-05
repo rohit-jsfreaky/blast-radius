@@ -1,0 +1,32 @@
+{
+  "probe": "checks/sweep/INC-1/import-ref-format.mjs",
+  "bad_target": "a03cf3d",
+  "bad_kind": "rev",
+  "bad_rev": "a03cf3de84f9b74f138cd72161b40a5c6e0801f0",
+  "bad_result": "FAIL",
+  "good_target": "16984d6",
+  "good_kind": "rev",
+  "good_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+  "good_result": "PASS",
+  "time": "2026-10-05T18:21:16+05:30",
+  "git_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+  "status": "calibrated",
+  "bad_output": "FAIL INC-1 import-ref-format | import returned 204, want 422 validation_failed | \"`reference` is 6 to 12 characters of `A-Z0-9`\"",
+  "good_output": "PASS INC-1 import-ref-format | \"`reference` is 6 to 12 characters of `A-Z0-9`\"",
+  "history": [
+    {
+      "probe": "checks/sweep/INC-1/import-ref-format.mjs",
+      "bad_target": "a03cf3d",
+      "bad_kind": "rev",
+      "bad_rev": "a03cf3de84f9b74f138cd72161b40a5c6e0801f0",
+      "bad_result": "FAIL",
+      "good_target": "16984d6",
+      "good_kind": "rev",
+      "good_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+      "good_result": "PASS",
+      "time": "2026-10-05T18:21:16+05:30",
+      "git_rev": "16984d6f299d11bc773c9ba3a93f7571446618db",
+      "status": "calibrated"
+    }
+  ]
+}
