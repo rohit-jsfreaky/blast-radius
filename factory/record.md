@@ -29,3 +29,4 @@ end:
 - 18:22 R1.1 fixed 46f360c (round 1). INC-1 (family: reset/import boundary skips invariants, 9 siblings): REJECT INC1.1-INC1.5 to builder-a (seed overlap, foreign table, dup ids, unknown user). Open until fixed.
 - 18:23 INC-1 closed (family 9, 5 failing, all fixed on d01c189). Waiting verifier full suite/official checks.
 - 18:28 STAGE 1 DONE rev 5014e13. 18:32 STAGE PLAN 2 + H2.1 (builder-a UI WI2.1-2.4) + H2.2 (builder-b API WI2.5-2.8) sent.
+- 18:31 READY H2.2 builder-b 8df6fc9. ledger L2.1-25 (602ef52); family map stage 2 (95471b0). Waiting READY H2.1 (UI).
