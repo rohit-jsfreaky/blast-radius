@@ -4,7 +4,8 @@ import { validation } from "./errors.ts";
 import { hashPassword } from "./auth.ts";
 import { emptyState, findOverlap, nowRfc3339, STATE_VERSION } from "./store.ts";
 import type { Receipt, Reservation, Restaurant, State, User } from "./store.ts";
-import { setCapacity } from "./tables.ts";
+import { checkReservationExtras, normalizeReservation } from "./history.ts";
+import { baseTerms, capacityOf, parsePolicy } from "./policies.ts";
 import { addMinutes, formatInstant, isValidZone, localToInstant, parseLocal } from "./time.ts";
 import { isInt, isObj } from "./validate.ts";
 import type { Obj } from "./validate.ts";
@@ -24,7 +25,7 @@ const posInt = (v: unknown, what: string): number => (isInt(v) && v > 0 ? v : ba
 const arr = (v: unknown, what: string): unknown[] => (Array.isArray(v) ? v : bad(`${what} must be an array`));
 const obj = (v: unknown, what: string): Obj => (isObj(v) ? v : bad(`${what} must be an object`));
 
-function parseRestaurant(raw: unknown): Restaurant {
+function parseRestaurant(raw: unknown, fromExport = false): Restaurant {
   const r = obj(raw, "restaurant");
   const timezone = str(r.timezone, "timezone");
   if (!isValidZone(timezone)) bad(`unknown time zone ${timezone}`);
@@ -48,12 +49,25 @@ function parseRestaurant(raw: unknown): Restaurant {
     if (!pair.every((t) => tables.some((q) => q.id === t))) bad("combinable names a table that is not at the restaurant");
     return pair;
   });
-  return {
+  const out: Restaurant = {
     id: id(r.id, "restaurant id"), name: typeof r.name === "string" ? r.name : String(r.id), timezone,
     slot_minutes: posInt(r.slot_minutes, "slot_minutes"),
     reservation_duration_minutes: posInt(r.reservation_duration_minutes, "reservation_duration_minutes"),
     cancellation_cutoff_minutes: cutoff, opening_hours, tables, combinable,
+    manager_user_ids: arr(r.manager_user_ids ?? [], "manager_user_ids").map((u) => id(u, "manager user id")),
+    policies: [], revision: 0,
   };
+  if (fromExport) {
+    const rev = r.revision ?? 0;
+    if (!isInt(rev) || rev < 0) bad("restaurant revision must be a non-negative integer");
+    out.revision = rev;
+    out.policies = arr(r.policies ?? [], "policies").map((x, i) => {
+      const p = obj(x, "policy");
+      if (p.policy_version !== i + 1) bad("policy versions must be 1, 2, 3 in publication order");
+      return { policy_version: i + 1, ...parsePolicy(p, out) };
+    });
+  }
+  return out;
 }
 
 /** Cross-record invariants that reset and import must both hold (L1.1 no overlap, ids unique, references resolve). */
@@ -73,11 +87,38 @@ function checkIntegrity(s: State): void {
     if (!rest) bad("reservation names an unknown restaurant");
     if (!r.table_ids.length || !r.table_ids.every((id) => rest!.tables.some((t) => t.id === id))) bad("reservation names a table that is not at its restaurant");
     if (r.table_ids.length > 2 || (r.table_ids.length === 2 && !rest!.combinable.some((p) => p.includes(r.table_ids[0]) && p.includes(r.table_ids[1])))) bad("reservation holds tables that are not a declared combination");
-    if (r.party_size > setCapacity(rest!, r.table_ids)) bad("reservation party_size exceeds the capacity of its tables");
+    checkReservationExtras(r, bad);
+    if (r.party_size > capacityOf(r.accepted_terms, r.table_ids)) bad("reservation party_size exceeds the capacity of its tables");
     if (!userIds.has(r.user_id)) bad("reservation names an unknown user");
     if (r.status === "confirmed" && findOverlap(placed, r.restaurant_id, r.table_ids, r.start_ms, r.end_ms)) bad("two confirmed reservations overlap on one table");
     placed.reservations.push(r);
   }
+  checkSeries(s);
+}
+
+/** Series invariants: 2..12 distinct occurrences in index order, all owned by the series owner at its restaurant, each pointing back at it. */
+function checkSeries(s: State): void {
+  if (!Array.isArray(s.series)) bad("series must be an array");
+  const ids = new Set<string>();
+  const inSeries = new Set<string>();
+  for (const ser of s.series) {
+    const x = obj(ser, "series");
+    const sid = str(x.series_id, "series_id");
+    if (ids.has(sid)) bad("duplicate series id");
+    ids.add(sid);
+    if (!isInt(x.revision) || x.revision < 1 || !isInt(x.interval_weeks) || x.interval_weeks < 1 || x.interval_weeks > 4) bad("series revision or interval is invalid");
+    const occ = arr(x.occurrences, "series occurrences");
+    if (occ.length < 2 || occ.length > 12) bad("a series has 2 to 12 occurrences");
+    occ.forEach((o, i) => {
+      const e = obj(o, "occurrence");
+      const rec = s.reservations.find((r) => r.reference === e.reference);
+      if (e.index !== i || typeof e.exception !== "boolean" || !rec) bad("series occurrence is invalid");
+      if (rec!.series_id !== sid || rec!.user_id !== x.user_id || rec!.restaurant_id !== x.restaurant_id) bad("series occurrence does not match its reservation");
+      if (inSeries.has(rec!.reference)) bad("a reservation is in two series");
+      inSeries.add(rec!.reference);
+    });
+  }
+  for (const r of s.reservations) if (r.series_id !== undefined && !inSeries.has(r.reference)) bad("reservation names a series that does not list it");
 }
 
 /** A seeded reservation holds `table_id` or `table_ids` (not both): one or more distinct ids. */
@@ -125,6 +166,7 @@ export async function stateFromFixture(raw: unknown): Promise<State> {
       user_id: id(r.user_id, "reservation user_id"), start_ms: start!, end_ms: end,
     };
     if (s.reservations.some((q) => q.reference === res.reference || q.reservation_id === res.reservation_id)) bad("duplicate reservation reference or id");
+    normalizeReservation(res, rest!, baseTerms(rest!));
     s.reservations.push(res);
   }
   checkIntegrity(s);
@@ -161,7 +203,7 @@ export function stateFromExport(raw: unknown): State {
   const rids = new Set<string>();
   const parsedRestaurants: Restaurant[] = [];
   for (const r of s.restaurants as Restaurant[]) {
-    const p = parseRestaurant(r);
+    const p = parseRestaurant(r, true);
     if (rids.has(p.id)) bad("duplicate restaurant id");
     rids.add(p.id);
     parsedRestaurants.push(p);
@@ -177,6 +219,8 @@ export function stateFromExport(raw: unknown): State {
     if (!isInt(x.party_size) || typeof x.start_ms !== "number" || typeof x.end_ms !== "number") bad("reservation numbers are invalid");
     if (!rids.has(x.restaurant_id as string)) bad("reservation names an unknown restaurant");
     reference(x.reference);
+    const rest = s.restaurants.find((q) => q.id === x.restaurant_id)!;
+    normalizeReservation(r, rest, baseTerms(rest)); // stage-1/2 exports lack revision, terms and history
     if (refs.has(x.reference as string) || resIds.has(x.reservation_id as string)) bad("duplicate reservation reference or id");
     refs.add(x.reference as string);
     resIds.add(x.reservation_id as string);
