@@ -39,3 +39,4 @@ end:
 - 19:30 GATE PASS stage 3 @542cd39 (official-s3-a). OPEN REJECT INC3.1 | L1.17 sibling | builder-a | unknown manager_user_ids accepted at reset/import. Awaiting fix + SWEEP CLEAR.
 - 19:36 STAGE 3 DONE rev 7417cd3. STAGE PLAN 4 + H4.1 (builder-a WI4.1-4.2) + H4.2 (builder-b WI4.3-4.5) sent.
 - 19:44 READY H4.1 + H4.2 on ad9619b. VERIFY H4.V1 sent.
+- 19:48 GATE PASS stage 4 @0c0b41e (official-s4-a); limitation: verifier's independent exhaustive planner comparator not finished. Awaiting SWEEP CLEAR (asked investigator to include independent brute force).
