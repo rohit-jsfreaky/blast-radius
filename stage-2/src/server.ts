@@ -4,6 +4,7 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import { ApiError, errorBody } from "./errors.ts";
 import { makeBodyReaders, Router } from "./router.ts";
 import { authenticate } from "./auth.ts";
+import { staticFor } from "./static.ts";
 import { registerCoreRoutes } from "./routes.ts";
 import { register as registerReservations } from "./reservations.ts";
 import { register as registerMoves } from "./moves.ts";
@@ -40,6 +41,11 @@ function send(res: ServerResponse, status: number, body?: unknown): void {
   res.end(payload);
 }
 
+function sendFile(res: ServerResponse, type: string, body: Buffer, head: boolean): void {
+  res.writeHead(200, { "Content-Type": type, "Content-Length": body.length, "Cache-Control": "no-cache" });
+  res.end(head ? undefined : body);
+}
+
 async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
     const url = new URL(req.url ?? "/", "http://localhost");
@@ -48,7 +54,11 @@ async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> 
     if (path.length > 1 && path.endsWith("/")) path = path.slice(0, -1);
     const raw = await readBody(req);
     const m = router.match(method, path);
-    if (!m) throw new ApiError(404, "not_found", "no such route");
+    if (!m) {
+      const file = method === "GET" || method === "HEAD" ? await staticFor(path) : null;
+      if (file) return sendFile(res, file.type, file.body, method === "HEAD");
+      throw new ApiError(404, "not_found", "no such route");
+    }
     const user = m.route.opts.auth ? authenticate(req.headers) : null;
     const out = await m.route.handler({
       method, path, params: m.params, query: url.searchParams, headers: req.headers, user, ...makeBodyReaders(raw),
