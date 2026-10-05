@@ -1,0 +1,22 @@
+#!/bin/sh
+# commit-msg: Blast Radius factory hook. The rules live in check_commit.py next to this file.
+# A commit that touches stage-*/ must carry Seat:, Work-Item: and Origin: lines.
+# Works with Git for Windows (bundled sh) and Linux/WSL. Fails closed if no Python runs.
+hook_dir=$(dirname "$0")
+
+run_checker() {
+  if [ -n "$BLAST_PYTHON" ]; then
+    exec "$BLAST_PYTHON" "$hook_dir/check_commit.py" "$@"
+  fi
+  for cand in python3 python py; do
+    command -v "$cand" >/dev/null 2>&1 || continue
+    if [ "$cand" = py ]; then flag=-3; else flag=; fi
+    # the Windows Store "python3" stub is on PATH but does not run: test each candidate for real
+    "$cand" $flag -c "import sys; sys.exit(0 if sys.version_info >= (3, 8) else 1)" >/dev/null 2>&1 || continue
+    exec "$cand" $flag "$hook_dir/check_commit.py" "$@"
+  done
+  echo "commit-msg: refused: no working Python 3 found (tried python3, python, py; set BLAST_PYTHON)" >&2
+  exit 1
+}
+
+run_checker commit-msg "$1"
