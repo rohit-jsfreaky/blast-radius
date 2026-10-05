@@ -55,12 +55,18 @@ function parseRestaurant(raw: unknown, fromExport = false): Restaurant {
     reservation_duration_minutes: posInt(r.reservation_duration_minutes, "reservation_duration_minutes"),
     cancellation_cutoff_minutes: cutoff, opening_hours, tables, combinable,
     manager_user_ids: arr(r.manager_user_ids ?? [], "manager_user_ids").map((u) => id(u, "manager user id")),
-    policies: [], revision: 0,
+    policies: [], revision: 0, closures: [],
   };
   if (fromExport) {
     const rev = r.revision ?? 0;
     if (!isInt(rev) || rev < 0) bad("restaurant revision must be a non-negative integer");
     out.revision = rev;
+    out.closures = arr(r.closures ?? [], "closures").map((x) => {
+      const c = obj(x, "closure");
+      if (!out.tables.some((t) => t.id === c.table_id)) bad("closure names a table that is not at the restaurant");
+      if (typeof c.from !== "string" || typeof c.to !== "string" || typeof c.from_ms !== "number" || typeof c.to_ms !== "number" || !(c.from_ms < c.to_ms)) bad("closure interval is invalid");
+      return { table_id: c.table_id as string, from: c.from, to: c.to, from_ms: c.from_ms, to_ms: c.to_ms, plan_id: str(c.plan_id, "closure plan_id") };
+    });
     out.policies = arr(r.policies ?? [], "policies").map((x, i) => {
       const p = obj(x, "policy");
       if (p.policy_version !== i + 1) bad("policy versions must be 1, 2, 3 in publication order");
@@ -95,6 +101,44 @@ function checkIntegrity(s: State): void {
     placed.reservations.push(r);
   }
   checkSeries(s);
+  checkPlans(s);
+}
+
+/** Stored replan previews and applied closures: every reference resolves, an applied plan owns exactly one closure and vice versa. */
+function checkPlans(s: State): void {
+  if (!Array.isArray(s.plans)) bad("plans must be an array");
+  const ids = new Set<string>();
+  for (const p of s.plans) {
+    const x = obj(p, "plan");
+    const pid = str(x.plan_id, "plan_id");
+    if (ids.has(pid)) bad("duplicate plan id");
+    ids.add(pid);
+    const rest = s.restaurants.find((q) => q.id === x.restaurant_id);
+    if (!rest) bad("plan names an unknown restaurant");
+    if (!isInt(x.restaurant_revision) || x.restaurant_revision < 0 || typeof x.applied !== "boolean") bad("plan revision or applied flag is invalid");
+    const c = obj(x.closure, "plan closure");
+    if (!rest!.tables.some((t) => t.id === c.table_id) || typeof c.from_ms !== "number" || typeof c.to_ms !== "number" || !(c.from_ms < c.to_ms) || typeof c.from !== "string" || typeof c.to !== "string") bad("plan closure is invalid");
+    const seen = new Set<string>();
+    let changed = 0;
+    for (const a of arr(x.assignments, "plan assignments")) {
+      const e = obj(a, "assignment");
+      const rec = s.reservations.find((q) => q.reference === e.reference && q.restaurant_id === rest!.id);
+      const tids = arr(e.table_ids, "assignment table_ids");
+      if (!rec || seen.has(rec.reference) || typeof e.changed !== "boolean") bad("plan assignment is invalid");
+      seen.add(rec!.reference);
+      if (tids.length < 1 || tids.length > 2 || !tids.every((t) => typeof t === "string" && rest!.tables.some((q) => q.id === t))) bad("plan assignment tables are invalid");
+      if (tids.length === 2 && !rest!.combinable.some((q) => q.includes(tids[0] as string) && q.includes(tids[1] as string))) bad("plan assignment is not a declared combination");
+      if (e.changed) changed++;
+    }
+    if (x.moved_count !== changed || !isInt(x.unused_seats) || x.unused_seats < 0) bad("plan totals are invalid");
+  }
+  for (const r of s.restaurants) {
+    for (const c of r.closures) {
+      const p = s.plans.find((q) => q.plan_id === c.plan_id);
+      if (!p || !p.applied || p.restaurant_id !== r.id || p.closure.table_id !== c.table_id) bad("closure does not belong to an applied plan of its restaurant");
+    }
+    for (const p of s.plans) if (p.restaurant_id === r.id && p.applied && r.closures.filter((c) => c.plan_id === p.plan_id).length !== 1) bad("an applied plan must have exactly one closure");
+  }
 }
 
 /** Series invariants: 2..12 distinct occurrences in index order, all owned by the series owner at its restaurant, each pointing back at it. */
