@@ -17,6 +17,8 @@ const id = (v: unknown, what: string): string => {
   const x = str(v, what);
   return x.length <= 64 ? x : bad(`${what} is longer than 64 characters`);
 };
+const REF = /^[A-Z0-9]{6,12}$/;
+const reference = (v: unknown): string => (typeof v === "string" && REF.test(v) ? v : bad("reservation reference must be 6 to 12 characters of A-Z0-9"));
 const posInt = (v: unknown, what: string): number => (isInt(v) && v > 0 ? v : bad(`${what} must be a positive integer`));
 const arr = (v: unknown, what: string): unknown[] => (Array.isArray(v) ? v : bad(`${what} must be an array`));
 const obj = (v: unknown, what: string): Obj => (isObj(v) ? v : bad(`${what} must be an object`));
@@ -75,13 +77,14 @@ export async function stateFromFixture(raw: unknown): Promise<State> {
     const end = addMinutes(start!, rest!.reservation_duration_minutes);
     const tz = rest!.timezone;
     const res: Reservation = {
-      reservation_id: id(r.id ?? r.reservation_id, "reservation id"), reference: str(r.reference, "reservation reference"),
+      reservation_id: id(r.id ?? r.reservation_id, "reservation id"), reference: reference(r.reference),
       restaurant_id: rest!.id, table_id: id(r.table_id, "reservation table_id"), party_size: posInt(r.party_size, "party_size"),
       status: r.status === "cancelled" ? "cancelled" : "confirmed", starts_at_local: r.starts_at_local as string,
       starts_at: formatInstant(tz, start!), ends_at: formatInstant(tz, end),
       created_at: typeof r.created_at === "string" ? r.created_at : nowRfc3339(),
       user_id: id(r.user_id, "reservation user_id"), start_ms: start!, end_ms: end,
     };
+    if (s.reservations.some((q) => q.reference === res.reference || q.reservation_id === res.reservation_id)) bad("duplicate reservation reference or id");
     s.reservations.push(res);
   }
   return s;
@@ -121,6 +124,7 @@ export function stateFromExport(raw: unknown): State {
     if (x.status !== "confirmed" && x.status !== "cancelled") bad("reservation status is invalid");
     if (!isInt(x.party_size) || typeof x.start_ms !== "number" || typeof x.end_ms !== "number") bad("reservation numbers are invalid");
     if (!rids.has(x.restaurant_id as string)) bad("reservation names an unknown restaurant");
+    reference(x.reference);
     if (refs.has(x.reference as string) || resIds.has(x.reservation_id as string)) bad("duplicate reservation reference or id");
     refs.add(x.reference as string);
     resIds.add(x.reservation_id as string);
