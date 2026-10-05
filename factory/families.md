@@ -187,3 +187,43 @@ places: availability slots/durations/capacities and explain policy_version, crea
 # Carried toward stage 4
 - RISK F19 | restaurant revision counts every successful new booking, real amendment, cancellation, policy publication and plan application — implement it on every write path now.
 - RISK F20 | replans keep accepted terms; series amend adopts the new date's policy.
+
+# Stage 4 family map (investigator, stage-4 start)
+
+## Earlier families extended by stage 4
+- F1 time: replan `from`/`to` are instants WITH explicit offsets (reject bare local or missing offset, `from >= to` → 422); series amend `local_time` exactly HH:MM 00:00..23:59 applied on each occurrence's ORIGINAL scheduled local date (DST gap → `invalid_local_time`, repeated → first occurrence).
+- F2 occupancy: an applied closure is occupancy — availability (singles AND pairs with that member), explain `no_overlap` false, create/PATCH/moves/series adoption/series amend → 409 `table_unavailable`; half-open `[from,to)`; a closure at another restaurant changes nothing here.
+- F3 idempotency: three new paths (POST replans, POST replans/{plan_id}/apply, POST /series/{id}/amend); path is part of the key (same key + `{}` on another plan's apply is a different request); preview replay must not create a second plan; apply replay returns the original 200 even after later changes; a different key on an applied plan → 409 `plan_already_applied`.
+- F5 auth: replans manager-only (403 non-manager, 401 no token, 404 unknown restaurant/table/plan, plan of another restaurant 404); series amend owner-only (404 other owner/unknown, 401 no token).
+- F6 atomicity: apply all-or-nothing (closure + every assignment + revisions + histories), `stale_plan` / `no_feasible_plan` change nothing; series amend failure leaves histories, idempotency records and all revisions unchanged.
+- F7 cutoff: diners' cutoffs do NOT block an operator repair; series amend checks each real change's OLD accepted cutoff.
+- F9 bookability: series amend validates each changed occurrence against the policy of its resulting date (as PATCH).
+- F10/F17: stage 4 imports stage 1, 2 and 3 exports; exports plans, applied closures, apply receipts, amend receipts; imported series (moved and cancelled occurrences) must work with amend and replans.
+- F12 table sets: assignments may be singles or declared pairs; `reassigned` history uses `table_ids`.
+- F18 concurrency: concurrent applies never leave partially moved bookings; concurrent series amends from one expected revision → at most one real change.
+- F19 counters: the restaurant revision is now OBSERVABLE (`restaurant_revision` in replan/apply) and drives `stale_plan` — every successful booking, real amendment, cancellation, policy publication, plan application (and stage-3 adoption, batch) must move it exactly once; previews, replays, failures, no-ops must not. Apply: moved booking revision +1 once, unmoved nothing, restaurant +1 once per plan, each affected series +1 once per plan if a member moved. Series amend: occurrence revision +1 per changed occurrence, series and restaurant +1 once if anything changed, all-no-op changes nothing.
+- F20 terms frozen: repair keeps times, party size and accepted terms (capacity under the booking's OWN accepted terms, not the current policy); series amend adopts the resulting date's policy like PATCH.
+- F21 no-op: series amend with identical resulting fields is a no-op and keeps terms; unmoved bookings in a plan gain nothing.
+- INC-1..3 seeded/imported state: imported plans, closures and receipts must reference existing restaurants, tables, bookings; an applied closure's table belongs to its restaurant; a plan belongs to its restaurant.
+
+## F23 — The plan is the exact optimum of a fully defined objective over every feasible assignment.
+quotes: "Among feasible plans minimize, in order:" · "Number of bookings whose table set changes." · "Total unused seats across all considered bookings (capacity minus party size)." · "The vector of option ranks in ascending reservation-reference order. Singles are ranked first in fixture order, then pairs in declared order, starting at 0." · "Consider every confirmed booking at this restaurant overlapping that interval."
+places: candidate set (singles + declared pairs only, capacity from each booking's OWN accepted terms), considered set (EVERY confirmed booking at the restaurant overlapping [from,to), on ANY table — not only bookings on the closed table), conflicts (fixed bookings, other assignments, previous closures, the proposed closure), lexicographic tie-break, `changed` = table SET differs (pair order irrelevant), `moved_count`, `unused_seats`, reference order of `assignments`, `no_feasible_plan`, `planning_limit` only above 6/4/6.
+probe: exhaustive brute-force reference on varied small fixtures (verifier owns it; investigator sweeps the siblings: considered-set scope, own-terms capacity, previously applied closure, pair candidates).
+
+## F24 — A plan is a snapshot of one restaurant revision: any intervening successful write at that restaurant makes it stale; nothing else does.
+quotes: "Any intervening restaurant revision invalidates the plan: 409 `stale_plan`, changing nothing." · "A closure at another restaurant does not invalidate this plan." · "No-op writes, failures, previews and replays do not increment it."
+places: every write path at the restaurant (booking, PATCH, cancel, moves, policy, adoption, series amend, other plan applied) → stale; previews, replays, failed writes, no-ops, writes at other restaurants → still applicable.
+
+# RISK list (stage 4)
+- RISK F23 | considered set = every confirmed booking at the restaurant overlapping the interval, on any table | applies to "Consider every confirmed booking at this restaurant overlapping that interval."
+- RISK F23/F20 | capacity under each booking's OWN accepted terms, not current policy or fixture | applies to "enough capacity under **its own accepted terms**"
+- RISK F2 | applied closure = occupancy everywhere (availability singles+pairs, explain, create, PATCH, moves, adoption, series amend, later replans) | applies to "Closures thereafter exclude singles and pairs from availability and reject creates/amendments with 409 `table_unavailable`."
+- RISK F19/F24 | restaurant revision on every write; stale_plan on any of them, never on previews/replays/failures/no-ops/other restaurants | applies to "Any intervening restaurant revision invalidates the plan"
+- RISK F3 | three new idempotent paths; path in key; plan_already_applied vs replay | applies to "replay of the successful key returns the original response with 200, even after later changes"
+- RISK F7 | cutoff must NOT block a repair | applies to "Diners' cancellation cutoffs do not prevent an operator repair."
+- RISK F6/F18 | apply atomic under concurrency | applies to "Concurrent applications must not leave partially moved bookings."
+- RISK F19 | series revision +1 once per plan when a member moved; exception flags preserved | applies to "Each affected series revision increases once per plan application if at least one member moved."
+- RISK F1/F21 | series amend on ORIGINAL scheduled dates, excluding cancelled and exception occurrences; no-op keeps terms | applies to "Change their clock time on their original scheduled local dates"
+- RISK F10/INC-1..3 | stage 4 imports stage 1-3 exports; imported plans/closures/receipts integrity-checked | applies to "A stage-4 service must accept exports produced by the same team's stages 1–3."
+- RISK F13 (UI) | grid, confirmation and lookup reflect an applied plan (moved table labels, closed cells false) | applies to "Existing availability, confirmation and lookup screens must reflect an applied plan."
