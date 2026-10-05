@@ -1,0 +1,1 @@
+holdout stage 2 [D:/my_projects/hackathons/blast-radius/band-work/result3/stage-2]: 66/66 pass (s1 35/35 s2 31/31) in 34.4s

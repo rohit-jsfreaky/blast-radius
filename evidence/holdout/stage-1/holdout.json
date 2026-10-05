@@ -1,0 +1,339 @@
+{
+ "summary": {
+  "label": "D:/my_projects/hackathons/blast-radius/band-work/result3/stage-1",
+  "stage": 1,
+  "run_id": "0b2e8dc14c",
+  "started_at": "2026-10-05T20:05:21+0530",
+  "health_seconds": 2.12,
+  "case_seconds": 6.8,
+  "passed": 35,
+  "total": 35,
+  "per_stage": {
+   "1": {
+    "pass": 35,
+    "fail": 0,
+    "skip": 0,
+    "total": 35
+   }
+  },
+  "previous": null,
+  "wall_seconds": 11.2
+ },
+ "cases": [
+  {
+   "id": "HO-1-01",
+   "stage": 1,
+   "quote": "Return 200 once the service and its data store can serve requests, within 60 seconds of container start.",
+   "why_not_shipped": "the shipped health check reads the status field only; it never checks the JSON body exactly or its content type.",
+   "result": "pass",
+   "excerpt": "GET /health -> 200 {\"status\":\"ok\"}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-02",
+   "stage": 1,
+   "quote": "Replace all service state with the fixture in the request body (\u00a74). When reset returns 204, subsequent requests must see only that fixture.",
+   "why_not_shipped": "the shipped reset check compares restaurant lists only; it never checks that earlier users and their tokens are gone.",
+   "result": "pass",
+   "excerpt": "POST /auth/login -> 401 {\"error\":{\"code\":\"unauthenticated\",\"message\":\"invalid credentials\"}} | POST /auth/login -> 200 {\"user_id\":\"u_h_ada\",\"display_name\":\"Ada Holdout\",\"token\":\"5b180137b11b4c5a3e31fd404cc473c03cf1078ff19d495e202d90e0906b495a\"} | GET /reservations -> 200 {\"reservations\":[]}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-03",
+   "stage": 1,
+   "quote": "The restaurant with its `slot_minutes`, `reservation_duration_minutes`, `cancellation_cutoff_minutes`, `opening_hours` and `tables`, in the fixture's shape.",
+   "why_not_shipped": "the shipped detail check compares table-id sets and the number of opening-hours rows, never labels, capacities or the hours themselves.",
+   "result": "pass",
+   "excerpt": "POST /auth/login -> 200 {\"user_id\":\"u_h_bob\",\"display_name\":\"Bob Holdout\",\"token\":\"5c652b47d32d9f788c15d1860a90b8d48767c062660baf7f10542e1285487833\"} | POST /auth/login -> 200 {\"user_id\":\"u_h_mia\",\"display_name\":\"Mia Manager\",\"token\":\"12fc6515edaa31f3415350ea96ee00112aecfb8dde71cde4c82aa9feebe9420b\"} | GET /restaurants/r_hold -> 200 {\"id\":\"r_hold\",\"name\":\"Chai Kitchen\",\"timezone\":\"Asia/Kolkata\",\"slot_minutes\":15,\"reservation_duration_minutes\":75,\"cancellation_cutoff_minutes\":45,\"opening_hours\":[{\"weekday\":\"tue\",\"opens\":\"11:30\",\"closes\":\"14:45\"},{\"weekday\":\"sat\",\"opens\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-04",
+   "stage": 1,
+   "quote": "A slot appears for every `slot_minutes` step from `opens` such that `slot + reservation_duration_minutes <= closes`.",
+   "why_not_shipped": "the shipped grid check uses only a 30-minute grid, a 90-minute duration and an 18:00 opening.",
+   "result": "pass",
+   "excerpt": "POST /auth/login -> 200 {\"user_id\":\"u_h_bob\",\"display_name\":\"Bob Holdout\",\"token\":\"98b31dd79540cc29ea78ceeb81f25db417213ca2f4670ce763884da2ba9f98e6\"} | POST /auth/login -> 200 {\"user_id\":\"u_h_mia\",\"display_name\":\"Mia Manager\",\"token\":\"d83744fadaf0b208879c6cad0529223598e1cac8f9f0bf248bf4d9ec159d1d85\"} | GET /availability -> 200 {\"restaurant_id\":\"r_hold\",\"date\":\"2026-10-14\",\"timezone\":\"Europe/Berlin\",\"slots\":[{\"starts_at_local\":\"2026-10-14T17:15\",\"starts_at\":\"2026-10-14T17:15:00+02:00\",\"available_table_ids\":[\"tw_1\",\"tw_2\",\"tw_3\"]},{\"starts_at_local\":\"2026-10-14T18:...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-05",
+   "stage": 1,
+   "quote": "Bookings start on a grid of this many minutes from opening time",
+   "why_not_shipped": "shipped grid rejections use a 30-minute grid opening at 18:00, where every half hour is on the grid.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 422 {\"error\":{\"code\":\"not_on_slot_grid\",\"message\":\"start is not on the slot grid\"}} | POST /reservations -> 201 {\"reservation_id\":\"res_1\",\"reference\":\"W5F85Y\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T18:45\",\"starts_at\":\"2026-10-14T18:45:00+02:00\",\"ends_at\":\"2026-10-14T20:45:00+02:00\"... | POST /reservations -> 422 {\"error\":{\"code\":\"outside_opening_hours\",\"message\":\"outside opening hours, or the reservation would end after closing\"}}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-06",
+   "stage": 1,
+   "quote": "Offsets must follow the IANA rules for the specified zone and date.",
+   "why_not_shipped": "shipped time checks use Europe/Berlin and America/New_York only; no half-hour offset zone is ever booked.",
+   "result": "pass",
+   "excerpt": "POST /auth/login -> 200 {\"user_id\":\"u_h_mia\",\"display_name\":\"Mia Manager\",\"token\":\"686079cda297b434ba49b30907b6db4f4b33852bf18c9d4e3829f59fcee2b15b\"} | GET /availability -> 200 {\"restaurant_id\":\"r_hold\",\"date\":\"2026-10-14\",\"timezone\":\"Asia/Kolkata\",\"slots\":[{\"starts_at_local\":\"2026-10-14T12:00\",\"starts_at\":\"2026-10-14T12:00:00+05:30\",\"available_table_ids\":[\"tw_1\",\"tw_2\",\"tw_3\"]},{\"starts_at_local\":\"2026-10-14T12:3... | POST /reservations -> 201 {\"reservation_id\":\"res_1\",\"reference\":\"ZBJ2Z2\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+05:30\",\"ends_at\":\"2026-10-14T20:30:00+05:30\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-07",
+   "stage": 1,
+   "quote": "Local times in the skipped hour do not exist. They never appear in availability",
+   "why_not_shipped": "the shipped spring-forward check only books Berlin's skipped hour; no check reads availability on a spring-forward day.",
+   "result": "pass",
+   "excerpt": "GET /availability -> 200 {\"restaurant_id\":\"r_ny\",\"date\":\"2026-03-08\",\"timezone\":\"America/New_York\",\"slots\":[{\"starts_at_local\":\"2026-03-08T00:00\",\"starts_at\":\"2026-03-08T00:00:00-05:00\",\"available_table_ids\":[\"tw_1\",\"tw_2\",\"tw_3\"]},{\"starts_at_local\":\"2026-03-08T00... | POST /reservations -> 422 {\"error\":{\"code\":\"invalid_local_time\",\"message\":\"that local time does not exist (daylight-saving gap)\"}} | POST /reservations -> 201 {\"reservation_id\":\"res_1\",\"reference\":\"TN9C37\",\"restaurant_id\":\"r_ny\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-03-08T03:00\",\"starts_at\":\"2026-03-08T03:00:00-04:00\",\"ends_at\":\"2026-03-08T04:30:00-04:00\",\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-08",
+   "stage": 1,
+   "quote": "Always resolve to the first occurrence \u2014 the one before the clocks change.",
+   "why_not_shipped": "shipped fall-back checks use Berlin only; New York's repeated 01:00-02:00 hour is never booked or listed.",
+   "result": "pass",
+   "excerpt": "POST /auth/login -> 200 {\"user_id\":\"u_h_mia\",\"display_name\":\"Mia Manager\",\"token\":\"d7fdbf82512a0bacd9e323b8319e2388f193f507f319333c91bcfc3f0355e597\"} | GET /availability -> 200 {\"restaurant_id\":\"r_ny\",\"date\":\"2026-11-01\",\"timezone\":\"America/New_York\",\"slots\":[{\"starts_at_local\":\"2026-11-01T00:00\",\"starts_at\":\"2026-11-01T00:00:00-04:00\",\"available_table_ids\":[\"tw_1\",\"tw_2\",\"tw_3\"]},{\"starts_at_local\":\"2026-11-01T00... | POST /reservations -> 201 {\"reservation_id\":\"res_1\",\"reference\":\"7G03L6\",\"restaurant_id\":\"r_ny\",\"table_id\":\"tw_2\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-11-01T01:30\",\"starts_at\":\"2026-11-01T01:30:00-04:00\",\"ends_at\":\"2026-11-01T02:00:00-05:00\",\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-09",
+   "stage": 1,
+   "quote": "`reservation_duration_minutes` is **absolute time**, not wall-clock.",
+   "why_not_shipped": "the shipped check reads one booking's ends_at; none books the next slot to see that occupancy itself is measured in absolute time.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 201 {\"reservation_id\":\"res_1\",\"reference\":\"J338JA\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-25T02:30\",\"starts_at\":\"2026-10-25T02:30:00+02:00\",\"ends_at\":\"2026-10-25T03:00:00+01:00\"... | POST /reservations -> 201 {\"reservation_id\":\"res_2\",\"reference\":\"A5AGQK\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-25T03:00\",\"starts_at\":\"2026-10-25T03:00:00+01:00\",\"ends_at\":\"2026-10-25T04:30:00+01:00\"... | POST /reservations -> 409 {\"error\":{\"code\":\"table_unavailable\",\"message\":\"the table is taken for an overlapping time\"}}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-10",
+   "stage": 1,
+   "quote": "Two `confirmed` reservations must never occupy the same table at overlapping times, including during concurrent requests.",
+   "why_not_shipped": "the shipped concurrency sample races creates only; no check races amendments onto one free table.",
+   "result": "pass",
+   "excerpt": "PATCH /reservations/KQBN2M -> 409 {\"error\":{\"code\":\"table_unavailable\",\"message\":\"the table is taken for an overlapping time\"}} | GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"60M6XR\",\"restaurant_id\":\"r_hold\",\"table_id\":\"t01\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14... | GET /availability -> 200 {\"restaurant_id\":\"r_hold\",\"date\":\"2026-10-14\",\"timezone\":\"Europe/Berlin\",\"slots\":[{\"starts_at_local\":\"2026-10-14T18:00\",\"starts_at\":\"2026-10-14T18:00:00+02:00\",\"available_table_ids\":[\"t05\"]},{\"starts_at_local\":\"2026-10-14T18:30\",\"starts_at\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-11",
+   "stage": 1,
+   "quote": "For concurrent identical requests with an unused key, exactly one returns 201. The others return 200 with the same body. The operation takes effect only once.",
+   "why_not_shipped": "shipped replay checks are sequential; none fires one unused key from many clients at once.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"MQ38GS\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":3,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | POST /reservations -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"MQ38GS\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":3,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"MQ38GS\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":3,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-12",
+   "stage": 1,
+   "quote": "A successful replay returns the original response, even after the resource changes or is cancelled. It makes no further state changes.",
+   "why_not_shipped": "the shipped replay-after-change check follows a cancel; none replays after an amendment and re-reads the state.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"N8YRX1\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"N8YRX1\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T20:30\",\"starts_at\":\"2026-10-14T20:30:00+02:00\",\"ends_at\":\"2026-10-1... | GET /availability -> 200 {\"restaurant_id\":\"r_hold\",\"date\":\"2026-10-14\",\"timezone\":\"Europe/Berlin\",\"slots\":[{\"starts_at_local\":\"2026-10-14T18:00\",\"starts_at\":\"2026-10-14T18:00:00+02:00\",\"available_table_ids\":[\"tw_2\",\"tw_3\"]},{\"starts_at_local\":\"2026-10-14T18:30\",\"st...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-13",
+   "stage": 1,
+   "quote": "The same key with the same body on a different path is a different request, not a replay, and must succeed normally.",
+   "why_not_shipped": "no shipped check sends one key to two different write paths.",
+   "result": "pass",
+   "excerpt": "POST /reservation-moves -> 201 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"3XIX93\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1... | POST /reservations -> 201 {\"reservation_id\":\"res_2\",\"reference\":\"IND8ZN\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_3\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | GET /reservations/3XIX93 -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"3XIX93\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-14",
+   "stage": 1,
+   "quote": "Key reused after the original request failed with 4xx | Treated as a first use",
+   "why_not_shipped": "no shipped check reuses a key whose first attempt was refused.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 409 {\"error\":{\"code\":\"table_unavailable\",\"message\":\"the table is taken for an overlapping time\"}} | POST /reservations/GU6YGO/cancel -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"GU6YGO\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"cancelled\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | POST /reservations -> 201 {\"reservation_id\":\"res_2\",\"reference\":\"N66UZZ\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-15",
+   "stage": 1,
+   "quote": "`Idempotency-Key` | 1 to 255 characters | 422 `validation_failed`",
+   "why_not_shipped": "shipped key checks cover an absent key only, never the 255-character limit.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"Idempotency-Key must be 1 to 255 characters\"}} | GET /reservations -> 200 {\"reservations\":[]} | POST /reservations -> 201 {\"reservation_id\":\"res_1\",\"reference\":\"GA89LW\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-16",
+   "stage": 1,
+   "quote": "Thus a used key with a different JSON body returns `409 idempotency_key_reuse` even when that new body would otherwise be invalid.",
+   "why_not_shipped": "the shipped reuse check changes party_size to another valid value, never to an invalid body.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 409 {\"error\":{\"code\":\"idempotency_key_reuse\",\"message\":\"Idempotency-Key was already used with a different request body\"}} | POST /reservations -> 409 {\"error\":{\"code\":\"idempotency_key_reuse\",\"message\":\"Idempotency-Key was already used with a different request body\"}} | POST /reservations -> 409 {\"error\":{\"code\":\"idempotency_key_reuse\",\"message\":\"Idempotency-Key was already used with a different request body\"}}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-17",
+   "stage": 1,
+   "quote": "means the same JSON value after parsing \u2014 key order and whitespace do not matter.",
+   "why_not_shipped": "shipped replays resend byte-identical bodies.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 201 {\"reservation_id\":\"res_1\",\"reference\":\"G9XF4C\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | POST /reservations -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"G9XF4C\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"G9XF4C\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-18",
+   "stage": 1,
+   "quote": "A successful amendment releases the old slot and reserves the new one together.",
+   "why_not_shipped": "shipped PATCH checks change the table; none shifts a booking onto a time that overlaps its own old interval.",
+   "result": "pass",
+   "excerpt": "PATCH /reservations/VCGGP7 -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"VCGGP7\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:30\",\"starts_at\":\"2026-10-14T19:30:00+02:00\",\"ends_at\":\"2026-10-14T21:00:00+02:00\"... | POST /reservations -> 201 {\"reservation_id\":\"res_2\",\"reference\":\"N8XGQP\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T18:00\",\"starts_at\":\"2026-10-14T18:00:00+02:00\",\"ends_at\":\"2026-10-14T19:30:00+02:00\"... | POST /reservations -> 409 {\"error\":{\"code\":\"table_unavailable\",\"message\":\"the table is taken for an overlapping time\"}}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-19",
+   "stage": 1,
+   "quote": "A failed amendment leaves the original booking and its occupancy unchanged.",
+   "why_not_shipped": "shipped PATCH rejections check the status only; none re-reads the booking or its occupancy afterwards.",
+   "result": "pass",
+   "excerpt": "PATCH /reservations/QQ44ZJ -> 422 {\"error\":{\"code\":\"party_exceeds_capacity\",\"message\":\"party is larger than the table's capacity\"}} | GET /reservations/QQ44ZJ -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"QQ44ZJ\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | POST /reservations -> 409 {\"error\":{\"code\":\"table_unavailable\",\"message\":\"the table is taken for an overlapping time\"}}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-20",
+   "stage": 1,
+   "quote": "the same cutoff rule as cancel applies (409 `cutoff_passed`), measured against the **current** start time.",
+   "why_not_shipped": "shipped cutoff checks use a cutoff that blocks every change; none moves a booking into its own cutoff window.",
+   "result": "pass",
+   "excerpt": "PATCH /reservations/9VOX5L -> 409 {\"error\":{\"code\":\"cutoff_passed\",\"message\":\"too close to the start to change or cancel\"}} | POST /reservations/9VOX5L/cancel -> 409 {\"error\":{\"code\":\"cutoff_passed\",\"message\":\"too close to the start to change or cancel\"}} | GET /reservations/9VOX5L -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"9VOX5L\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-06T19:00\",\"starts_at\":\"2026-10-06T19:00:00+02:00\",\"ends_at\":\"2026-10-06T20:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-21",
+   "stage": 1,
+   "quote": "Tokens do not expire. An account may have multiple valid tokens and concurrent sessions.",
+   "why_not_shipped": "shipped auth checks use each token once; none keeps using an earlier token after a later login.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 201 {\"reservation_id\":\"res_1\",\"reference\":\"K3V1SD\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"K3V1SD\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1... | POST /reservations/K3V1SD/cancel -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"K3V1SD\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"cancelled\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-22",
+   "stage": 1,
+   "quote": "Missing, malformed or unknown bearer token",
+   "why_not_shipped": "shipped 401 checks cover a missing or unknown token, never a malformed Authorization header.",
+   "result": "pass",
+   "excerpt": "GET /reservations -> 401 {\"error\":{\"code\":\"unauthenticated\",\"message\":\"missing or malformed bearer token\"}} | POST /reservations -> 401 {\"error\":{\"code\":\"unauthenticated\",\"message\":\"missing or malformed bearer token\"}} | GET /reservations -> 200 {\"reservations\":[]}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-23",
+   "stage": 1,
+   "quote": "Unparseable body, or a field of the wrong JSON type",
+   "why_not_shipped": "the shipped wrong-type check sends a numeric email to signup only, never to a booking.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 400 {\"error\":{\"code\":\"malformed_request\",\"message\":\"restaurant_id must be a string\"}} | POST /reservations -> 400 {\"error\":{\"code\":\"malformed_request\",\"message\":\"starts_at_local must be a string\"}} | GET /reservations -> 200 {\"reservations\":[]}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-24",
+   "stage": 1,
+   "quote": "invalid `party_size` values (including strings and booleans) and `starts_at_local` strings that are not a bare local `YYYY-MM-DDTHH:MM` are 422 `validation_failed`.",
+   "why_not_shipped": "shipped party_size checks use 0, -1, \"4\" and 1.5; never a boolean, null or a missing field.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"party_size must be a whole number of at least 1\"}} | POST /reservations -> 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"party_size is required\"}} | GET /reservations -> 200 {\"reservations\":[]}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-25",
+   "stage": 1,
+   "quote": "This includes invalid dates, negative counts and values exceeding a stated maximum or length.",
+   "why_not_shipped": "shipped starts_at_local rejections use offsets, seconds or free text, never a well-shaped impossible date.",
+   "result": "pass",
+   "excerpt": "POST /reservations -> 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"starts_at_local must be a bare local YYYY-MM-DDTHH:MM\"}} | POST /reservations -> 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"starts_at_local must be a bare local YYYY-MM-DDTHH:MM\"}} | GET /reservations -> 200 {\"reservations\":[]}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-26",
+   "stage": 1,
+   "quote": "Existing receipts, references, tokens and retries must remain valid after import; replacing the state with a fresh fixture does not satisfy this requirement.",
+   "why_not_shipped": "the shipped export check restores one booking's read; it never replays a key, keeps a token or replays a move receipt after import.",
+   "result": "pass",
+   "excerpt": "GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"5E4CAN\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_3\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1... | POST /auth/login -> 200 {\"user_id\":\"u_h_bob\",\"display_name\":\"Bob Holdout\",\"token\":\"31cb82e5dd305a98e922f81575a4c13ab86b68da3eb9da0cc330cd91184fe002\"} | POST /reservations -> 201 {\"reservation_id\":\"res_3\",\"reference\":\"F6TUQY\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T21:00\",\"starts_at\":\"2026-10-14T21:00:00+02:00\",\"ends_at\":\"2026-10-14T22:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-27",
+   "stage": 1,
+   "quote": "Import is replacement, not merge; repeating it restores the exported state without duplicating anything.",
+   "why_not_shipped": "the shipped export check imports once into a reset service; it never imports over newer data or imports twice.",
+   "result": "pass",
+   "excerpt": "POST /_test/import -> 204  | GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"6A234N\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1... | GET /availability -> 200 {\"restaurant_id\":\"r_hold\",\"date\":\"2026-10-14\",\"timezone\":\"Europe/Berlin\",\"slots\":[{\"starts_at_local\":\"2026-10-14T18:00\",\"starts_at\":\"2026-10-14T18:00:00+02:00\",\"available_table_ids\":[\"tw_2\",\"tw_3\"]},{\"starts_at_local\":\"2026-10-14T18:30\",\"st...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-28",
+   "stage": 1,
+   "quote": "missing fields, wrong track/version or an invalid state give 422 `validation_failed` without changing the destination.",
+   "why_not_shipped": "no shipped check sends a bad import.",
+   "result": "pass",
+   "excerpt": "POST /_test/import -> 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"format_version must be 1\"}} | POST /_test/import -> 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"state is required\"}} | GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"AGR4PF\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-29",
+   "stage": 1,
+   "quote": "An overlap among resulting bookings or with an unlisted booking gives 409 `table_unavailable`.",
+   "why_not_shipped": "the shipped move check is a batch of one; no check swaps two bookings' tables at the same time.",
+   "result": "pass",
+   "excerpt": "POST /reservation-moves -> 201 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"ZMG12I\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1... | GET /reservations/ZMG12I -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"ZMG12I\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | GET /reservations/VI4109 -> 200 {\"reservation_id\":\"res_2\",\"reference\":\"VI4109\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-30",
+   "stage": 1,
+   "quote": "Either every move commits or nothing changes: occupancy, reservation records and retry keys.",
+   "why_not_shipped": "the shipped move check never sees a batch fail.",
+   "result": "pass",
+   "excerpt": "GET /availability -> 200 {\"restaurant_id\":\"r_hold\",\"date\":\"2026-10-14\",\"timezone\":\"Europe/Berlin\",\"slots\":[{\"starts_at_local\":\"2026-10-14T18:00\",\"starts_at\":\"2026-10-14T18:00:00+02:00\",\"available_table_ids\":[\"tw_3\"]},{\"starts_at_local\":\"2026-10-14T18:30\",\"starts_at... | POST /reservations/DYXAJB/cancel -> 200 {\"reservation_id\":\"res_3\",\"reference\":\"DYXAJB\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_3\",\"party_size\":2,\"status\":\"cancelled\",\"starts_at_local\":\"2026-10-14T19:30\",\"starts_at\":\"2026-10-14T19:30:00+02:00\",\"ends_at\":\"2026-10-14T21:00:00+02:00\"... | POST /reservation-moves -> 201 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"7VRFUC\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T21:00\",\"starts_at\":\"2026-10-14T21:00:00+02:00\",\"ends_at\":\"2026-10-1...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-31",
+   "stage": 1,
+   "quote": "`moves` contains 1..8 objects with distinct string references. Invalid shape or duplicate references gives 422 `validation_failed`.",
+   "why_not_shipped": "the shipped move check sends one valid move; no batch-size or duplicate check ships.",
+   "result": "pass",
+   "excerpt": "POST /reservation-moves -> 422 {\"error\":{\"code\":\"validation_failed\",\"message\":\"references must be distinct\"}} | GET /reservations -> 200 {\"reservations\":[{\"reservation_id\":\"res_9\",\"reference\":\"0RZ7U9\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_3\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T21:00\",\"starts_at\":\"2026-10-14T21:00:00+02:00\",\"ends_at\":\"2026-10-1... | POST /reservation-moves -> 201 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"FX3TSF\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":1,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T18:00\",\"starts_at\":\"2026-10-14T18:00:00+02:00\",\"ends_at\":\"2026-10-1...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-32",
+   "stage": 1,
+   "quote": "Unknown/another owner's reference gives 404 `not_found`; different restaurants give 422 `validation_failed`. No token gives 401.",
+   "why_not_shipped": "no shipped check sends a move for someone else's booking, across restaurants or without a token.",
+   "result": "pass",
+   "excerpt": "POST /reservation-moves -> 401 {\"error\":{\"code\":\"unauthenticated\",\"message\":\"missing or malformed bearer token\"}} | GET /reservations/PYPQ3J -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"PYPQ3J\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | GET /reservations/FJQM5H -> 200 {\"reservation_id\":\"res_3\",\"reference\":\"FJQM5H\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T21:00\",\"starts_at\":\"2026-10-14T21:00:00+02:00\",\"ends_at\":\"2026-10-14T22:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-33",
+   "stage": 1,
+   "quote": "Non-occupancy errors use ordinary amendment codes and take precedence in input order",
+   "why_not_shipped": "no shipped move check returns an error, so error precedence is never asked.",
+   "result": "pass",
+   "excerpt": "POST /reservation-moves -> 422 {\"error\":{\"code\":\"party_exceeds_capacity\",\"message\":\"party is larger than the table's capacity\"}} | POST /reservation-moves -> 422 {\"error\":{\"code\":\"not_on_slot_grid\",\"message\":\"start is not on the slot grid\"}} | POST /reservation-moves -> 422 {\"error\":{\"code\":\"party_exceeds_capacity\",\"message\":\"party is larger than the table's capacity\"}}",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-34",
+   "stage": 1,
+   "quote": "Replays return that original response with 200, even after amendments or cancellations.",
+   "why_not_shipped": "the shipped move check never replays a batch key.",
+   "result": "pass",
+   "excerpt": "POST /reservation-moves -> 200 {\"reservations\":[{\"reservation_id\":\"res_1\",\"reference\":\"WPWG72\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_3\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-1... | GET /reservations/WPWG72 -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"WPWG72\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_3\",\"party_size\":1,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"... | GET /reservations/24MOTK -> 200 {\"reservation_id\":\"res_2\",\"reference\":\"24MOTK\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_2\",\"party_size\":4,\"status\":\"cancelled\",\"starts_at_local\":\"2026-10-14T19:00\",\"starts_at\":\"2026-10-14T19:00:00+02:00\",\"ends_at\":\"2026-10-14T20:30:00+02:00\"...",
+   "failure": ""
+  },
+  {
+   "id": "HO-1-35",
+   "stage": 1,
+   "quote": "Cancelled bookings give 409 `reservation_cancelled`. Each booking's existing cutoff applies.",
+   "why_not_shipped": "the shipped move check uses one confirmed booking far from its cutoff.",
+   "result": "pass",
+   "excerpt": "POST /reservation-moves -> 409 {\"error\":{\"code\":\"reservation_cancelled\",\"message\":\"reservation is cancelled\"}} | POST /reservation-moves -> 409 {\"error\":{\"code\":\"cutoff_passed\",\"message\":\"too close to the start to change or cancel\"}} | GET /reservations/BLREYN -> 200 {\"reservation_id\":\"res_1\",\"reference\":\"BLREYN\",\"restaurant_id\":\"r_hold\",\"table_id\":\"tw_1\",\"party_size\":2,\"status\":\"confirmed\",\"starts_at_local\":\"2026-10-15T19:00\",\"starts_at\":\"2026-10-15T19:00:00+02:00\",\"ends_at\":\"2026-10-15T20:30:00+02:00\"...",
+   "failure": ""
+  }
+ ]
+}

@@ -1,0 +1,41 @@
+.........................................................................................................................................F...............................                        [100%]
+=============================================================================================== FAILURES ===============================================================================================
+_____________________________________________________________________________________________ test_ho_4_09 _____________________________________________________________________________________________
+
+fresh = <function fresh.<locals>.<lambda> at 0x7f6999e3c720>
+
+    def test_ho_4_09(fresh):
+        """HO-4-09
+        Spec: "Planning must support up to 6 tables, 4 declared pairs and 6 considered bookings; larger inputs may return 422 `planning_limit`."
+        Not shipped: no shipped check plans at the stated size limit.
+        """
+        d = hl.day(9)
+        books = [Bk("HOA001", ["t2"], d, "18:00", 4), Bk("HOB002", ["t2"], d, "20:00", 3, user="bob"),
+                 Bk("HOC003", ["t4"], d, "18:30", 4), Bk("HOD004", ["t2", "t3"], d, "21:30", 9),
+                 Bk("HOE005", ["t6"], d, "19:00", 7, user="bob"), Bk("HOF006", ["t1"], d, "19:30", 2),
+                 Bk("HOG007", ["t3"], d, "22:00", 5), Bk("HOH008", ["t5"], d, "16:30", 2)]
+>       w = fresh(hl.fixture([r4()], reservations=[b.seed() for b in books]))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+cases/test_s4.py:255: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cases/conftest.py:136: in <lambda>
+    return lambda fix: hl.World(base_url, client, fix)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cases/holdout_lib.py:327: in __init__
+    self.anon.reset(fix)
+cases/holdout_lib.py:103: in reset
+    expect(resp, 204)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+resp = <Response [422 Unprocessable Entity]>, status = 204, code = None
+
+    def expect(resp: httpx.Response, status: int, code: str | None = None) -> httpx.Response:
+        if code is None:
+>           assert resp.status_code == status, f"expected {status}. {describe(resp)}"
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AssertionError: expected 204. POST /_test/reset -> 422 {"error":{"code":"validation_failed","message":"two confirmed reservations overlap on one table"}}
+
+cases/holdout_lib.py:177: AssertionError
+1 failed, 168 passed in 43.91s
+
