@@ -48,3 +48,4 @@ end: 19:59 IST (shell clock)
 - builder-b ran local Node smoke tests only; the official harness is the only independent run for its items.
 - UI: cancel on lookup is one click (no confirm step); a pair whose summed capacity is below the party size has no grid cell (row hidden).
 - Several sweep probes were calibrated on a coarse known-bad (pre-feature copy).
+- CORRECTION to the FINAL REPORT: 7 of the 8 defects were found by the sweeps (INC1.1-INC1.5, INC2.1, INC3.1) and 1 by the checks (R1.1). All 8 trace to one origin (L1.17/L1.41: values entering through reset or import without the API's checks), closed through cards INC-1, INC-2, INC-3 (families 9/4/4, failing 5/1/1). Regression 45/45 green (run at a57124f; stage-4 code identical to 0c0b41e).
