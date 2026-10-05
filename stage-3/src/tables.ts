@@ -2,29 +2,32 @@
 // One predicate for availability, create, patch and moves (F2 overlap over sets, F9 bookability).
 import { fail, malformed, notFound, validation } from "./errors.ts";
 import { findOverlap } from "./store.ts";
+import type { Terms } from "./policies.ts";
 import type { Restaurant, State } from "./store.ts";
 import type { Obj } from "./validate.ts";
 
 export interface Option { table_ids: string[]; capacity: number }
 
-const capacityOf = (r: Restaurant, ids: string[]): number => ids.reduce((n, id) => n + (r.tables.find((t) => t.id === id)?.capacity ?? 0), 0);
+/** Summed capacity of a table set under the selected policy's `capacities` (the fixture's table capacities when no terms are given). */
+const capacityOf = (r: Restaurant, ids: string[], terms?: Pick<Terms, "capacities">): number =>
+  ids.reduce((n, id) => n + ((terms ? terms.capacities[id] : r.tables.find((t) => t.id === id)?.capacity) ?? 0), 0);
 
 /** Every single table (fixture order) then every declared pair (combinable order, first declaration wins), each with its capacity. */
-export function allOptions(r: Restaurant): Option[] {
-  const out: Option[] = r.tables.map((t) => ({ table_ids: [t.id], capacity: t.capacity }));
+export function allOptions(r: Restaurant, terms?: Pick<Terms, "capacities">): Option[] {
+  const out: Option[] = r.tables.map((t) => ({ table_ids: [t.id], capacity: capacityOf(r, [t.id], terms) }));
   const seen = new Set<string>();
   for (const p of r.combinable) {
     const k = [...p].sort().join("\u0000");
     if (seen.has(k)) continue;
     seen.add(k);
-    out.push({ table_ids: [...p], capacity: capacityOf(r, p) });
+    out.push({ table_ids: [...p], capacity: capacityOf(r, p, terms) });
   }
   return out;
 }
 
 /** Options with capacity >= party and no overlapping confirmed reservation on any member for [startMs, endMs). */
-export function freeOptions(s: State, r: Restaurant, party: number, startMs: number, endMs: number): Option[] {
-  return allOptions(r).filter((o) => o.capacity >= party && !findOverlap(s, r.id, o.table_ids, startMs, endMs));
+export function freeOptions(s: State, r: Restaurant, party: number, startMs: number, endMs: number, terms?: Pick<Terms, "capacities">): Option[] {
+  return allOptions(r, terms).filter((o) => o.capacity >= party && !findOverlap(s, r.id, o.table_ids, startMs, endMs));
 }
 
 /**
