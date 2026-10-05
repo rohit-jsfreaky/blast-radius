@@ -4,7 +4,7 @@ Kept by @coordinator. Times from the shell clock only.
 
 ## Run
 start: Mon Oct 5 17:43 IST 2026 (shell clock)
-end:
+end: 19:59 IST (shell clock)
 
 ## Stages
 | stage | plan sent | done | accepted rev | defects (checks / sweep) | cards | notes |
@@ -12,7 +12,7 @@ end:
 | 1 | 17:47 | 18:28 | 5014e13 | 1 / 5 | INC-1 (family 9) | GATE PASS, SWEEP CLEAR; ledger probed 11/61 (limitation) |
 | 2 | 18:32 | 19:06 | fe88890 | 0 / 1 (INC-2) | INC-2 (family 4) | GATE PASS official-s2-c, SWEEP CLEAR |
 | 3 | 19:10 | 19:36 | 7417cd3 | 0 / 1 (INC-3) | INC-3 (family 4) | GATE PASS official-s3-b, SWEEP CLEAR |
-| 4 | 19:36 | | | | | |
+| 4 | 19:36 | 19:59 | 0c0b41e | 0 / 0 | none new | GATE PASS official-s4-a, SWEEP CLEAR 45/45 |
 
 ## Open REJECTs
 (none)
@@ -40,3 +40,11 @@ end:
 - 19:36 STAGE 3 DONE rev 7417cd3. STAGE PLAN 4 + H4.1 (builder-a WI4.1-4.2) + H4.2 (builder-b WI4.3-4.5) sent.
 - 19:44 READY H4.1 + H4.2 on ad9619b. VERIFY H4.V1 sent.
 - 19:48 GATE PASS stage 4 @0c0b41e (official-s4-a); limitation: verifier's independent exhaustive planner comparator not finished. Awaiting SWEEP CLEAR (asked investigator to include independent brute force).
+- 19:59 STAGE 4 DONE rev 0c0b41e. FINAL REPORT posted.
+
+## Known limitations
+- Ledger probe coverage is partial in every stage (stage 1: 11/61 probed locally, rest ruled by the requirement text: evidence/stage-1/ledger-limitations.md).
+- Stage 4: the verifier's own exhaustive planner comparison was not finished; the investigator's independent brute-force reference matched 783 previews.
+- builder-b ran local Node smoke tests only; the official harness is the only independent run for its items.
+- UI: cancel on lookup is one click (no confirm step); a pair whose summed capacity is below the party size has no grid cell (row hidden).
+- Several sweep probes were calibrated on a coarse known-bad (pre-feature copy).
