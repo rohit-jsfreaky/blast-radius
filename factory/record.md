@@ -34,3 +34,4 @@ end:
 - 18:44 READY H2.1 builder-a f1e0296; builder-b f52bf75 (INC-1 risk applied). VERIFY H2.V1 sent.
 - 18:56 GATE PASS stage 2 @64f99e9 (official-s2-b). OPEN REJECT INC2.1 | L1.17 sibling of INC-1 | builder-b | seeded/imported party exceeds capacity. UI family probes pending (investigator).
 - 19:06 STAGE 2 DONE rev fe88890. 19:10 STAGE PLAN 3 + H3.1 (builder-a WI3.1-3.4) + H3.2 (builder-b WI3.5-3.7) sent.
+- 19:15 READY H3.1 + H3.2 on 1c39408. VERIFY H3.V1 sent (D23 400-vs-422 to be ruled).
