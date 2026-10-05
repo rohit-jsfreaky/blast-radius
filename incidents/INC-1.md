@@ -1,6 +1,6 @@
 # INC-1 — reset accepts a seeded reservation whose reference is not 6-12 of A-Z0-9
 
-status: open
+status: closed
 stage: 1
 found-by: verifier REJECT R1.1
 symptom: POST /_test/reset with a seeded reservation reference `bad` returns 204 and the service exposes `bad`.
@@ -23,16 +23,16 @@ family rule: data entering through reset or import must satisfy every invariant 
 | reset: seeded duplicate references | L1.41 uniqueness at reset | builder-a | checks/sweep/INC-1/seed-ref-duplicate.mjs | a03cf3d → FAIL | PASS on 16984d6 | FIXED 46f360c (same fix commit) |
 | import: reference format | L1.41 at import | builder-a | checks/sweep/INC-1/import-ref-format.mjs | a03cf3d → FAIL | PASS on 16984d6 | FIXED 46f360c (same fix commit) |
 | import: duplicate references | L1.41 uniqueness at import | builder-a | checks/sweep/INC-1/import-ref-duplicate.mjs | scratch copy with uniqueness check removed → FAIL | PASS on 16984d6 | CLEARED |
-| reset: two seeded confirmed bookings overlap on one table | F2 at reset | builder-a | checks/sweep/INC-1/seed-overlap.mjs | 16984d6 → FAIL | FAIL on 16984d6 | REJECT INC1.1 |
-| reset: seeded booking on another restaurant's table | F9 at reset | builder-a | checks/sweep/INC-1/seed-table-foreign.mjs | 16984d6 → FAIL | FAIL on 16984d6 | REJECT INC1.2 |
-| reset: duplicate restaurant id | F11 ids at reset | builder-a | checks/sweep/INC-1/seed-dup-restaurant.mjs | 16984d6 → FAIL | FAIL on 16984d6 | REJECT INC1.3 |
-| reset: duplicate user id | F11 ids at reset | builder-a | checks/sweep/INC-1/seed-dup-user-id.mjs | 16984d6 → FAIL | FAIL on 16984d6 | REJECT INC1.4 |
-| reset: seeded booking names an unknown user_id | L1.17 at reset | builder-a | checks/sweep/INC-1/seed-unknown-user.mjs | 16984d6 → FAIL | FAIL on 16984d6 | REJECT INC1.5 |
+| reset: two seeded confirmed bookings overlap on one table | F2 at reset | builder-a | checks/sweep/INC-1/seed-overlap.mjs | 16984d6 → FAIL | FAIL on 16984d6; PASS on d01c189 | REJECT INC1.1 → FIXED d01c189 |
+| reset: seeded booking on another restaurant's table | F9 at reset | builder-a | checks/sweep/INC-1/seed-table-foreign.mjs | 16984d6 → FAIL | FAIL on 16984d6; PASS on d01c189 | REJECT INC1.2 → FIXED d01c189 |
+| reset: duplicate restaurant id | F11 ids at reset | builder-a | checks/sweep/INC-1/seed-dup-restaurant.mjs | 16984d6 → FAIL | FAIL on 16984d6; PASS on d01c189 | REJECT INC1.3 → FIXED d01c189 |
+| reset: duplicate user id | F11 ids at reset | builder-a | checks/sweep/INC-1/seed-dup-user-id.mjs | 16984d6 → FAIL | FAIL on 16984d6; PASS on d01c189 | REJECT INC1.4 → FIXED d01c189 |
+| reset: seeded booking names an unknown user_id | L1.17 at reset | builder-a | checks/sweep/INC-1/seed-unknown-user.mjs | 16984d6 → FAIL | FAIL on 16984d6; PASS on d01c189 | REJECT INC1.5 → FIXED d01c189 |
 
 Not probed (reading only): newReference/newReservationId/newUserId in store.ts skip ids already taken, so minted ids cannot collide with seeded/imported ones.
 
 ## Close
-siblings checked: 9 · failing found: 5 · fixed: 0 · cleared: 1 (+3 fixed by the original fix)
+siblings checked: 9 · failing found: 5 · fixed: 5 · cleared: 1 (+3 fixed by the original fix 46f360c)
 regression set: checks/sweep/INC-1/*.mjs (lib.mjs excluded)
 forward risk: stage 2 seeded `table_ids`/`status` and `combinable` pairs; stage 3 `manager_user_ids`; stage 4 imported plans/closures — every new fixture or export field must be validated like the API path that creates it.
-closed: —
+closed: 2026-10-05 on rev d01c189 (all 9 probes PASS)
