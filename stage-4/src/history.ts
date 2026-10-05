@@ -7,7 +7,7 @@ import { isInt, isObj } from "./validate.ts";
 
 export interface HistoryChange { field: string; from: unknown; to: unknown }
 export interface HistoryEntry {
-  seq: number; at: string; event: "created" | "changed" | "cancelled"; changes: HistoryChange[];
+  seq: number; at: string; event: "created" | "changed" | "cancelled" | "reassigned"; changes: HistoryChange[]; plan_id?: string;
   revision: number; accepted_terms: Terms;
 }
 
@@ -36,9 +36,9 @@ export function diffFields(a: Fields, b: Fields): HistoryChange[] {
 }
 
 /** Append the entry for the record's CURRENT revision and terms (callers bump revision / replace terms first). */
-export function pushHistory(rec: Reservation, restaurant: Restaurant, event: HistoryEntry["event"], changes: HistoryChange[], nowMs: number): void {
+export function pushHistory(rec: Reservation, restaurant: Restaurant, event: HistoryEntry["event"], changes: HistoryChange[], nowMs: number, planId?: string): void {
   rec.history.push({
-    seq: rec.history.length + 1, at: formatInstant(restaurant.timezone, nowMs), event, changes,
+    seq: rec.history.length + 1, at: formatInstant(restaurant.timezone, nowMs), event, changes, ...(planId === undefined ? {} : { plan_id: planId }),
     revision: rec.revision, accepted_terms: structuredClone(rec.accepted_terms),
   });
 }
@@ -87,7 +87,7 @@ export function checkReservationExtras(rec: Reservation, bad: (m: string) => nev
     || !Array.isArray(t.opening_hours) || !isObj(t.capacities)) bad("reservation accepted_terms is invalid");
   if (!Array.isArray(rec.history) || rec.history.length === 0) bad("reservation history must not be empty");
   rec.history.forEach((h, i) => {
-    if (!isObj(h) || h.seq !== i + 1 || typeof h.at !== "string" || !["created", "changed", "cancelled"].includes(h.event as string)
+    if (!isObj(h) || h.seq !== i + 1 || typeof h.at !== "string" || !["created", "changed", "cancelled", "reassigned"].includes(h.event as string)
       || !Array.isArray(h.changes) || !isInt(h.revision) || !isObj(h.accepted_terms)) bad("reservation history entry is invalid");
   });
   if (rec.history[0].event !== "created") bad("reservation history must start with created");
@@ -97,4 +97,16 @@ export function checkReservationExtras(rec: Reservation, bad: (m: string) => nev
 export function bumpRestaurant(restaurant: Restaurant): void {
   const r = restaurant as Restaurant & { revision?: number };
   r.revision = (r.revision ?? 0) + 1;
+}
+
+/**
+ * Seating repair (replan apply): the booking keeps its times and accepted terms; only its table set moves.
+ * Revision +1 once, one `reassigned` entry with a complete `table_ids` change and the plan id. The caller bumps the restaurant
+ * once per plan and calls bumpSeries(..., exception false) once for all moved members (exception flags are preserved).
+ */
+export function reassignBooking(rec: Reservation, restaurant: Restaurant, tableIds: string[], planId: string, nowMs: number): void {
+  const from = [...rec.table_ids];
+  rec.table_ids = [...tableIds];
+  rec.revision += 1;
+  pushHistory(rec, restaurant, "reassigned", [{ field: "table_ids", from, to: [...tableIds] }], nowMs, planId);
 }

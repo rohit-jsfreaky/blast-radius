@@ -8,11 +8,13 @@ import { staticFor } from "./static.ts";
 import { registerCoreRoutes } from "./routes.ts";
 import { register as registerReservations } from "./reservations.ts";
 import { register as registerMoves } from "./moves.ts";
+import { register as registerSeriesAmend } from "./seriesAmend.ts";
 
 const router = new Router();
 registerCoreRoutes(router);
 registerReservations(router);
 registerMoves(router);
+registerSeriesAmend(router);
 
 const MAX_BODY = 64 * 1024 * 1024;
 
