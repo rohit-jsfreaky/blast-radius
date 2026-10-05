@@ -31,3 +31,4 @@ end:
 - 18:28 STAGE 1 DONE rev 5014e13. 18:32 STAGE PLAN 2 + H2.1 (builder-a UI WI2.1-2.4) + H2.2 (builder-b API WI2.5-2.8) sent.
 - 18:31 READY H2.2 builder-b 8df6fc9. ledger L2.1-25 (602ef52); family map stage 2 (95471b0). Waiting READY H2.1 (UI).
 - 18:44 READY H2.1 builder-a f1e0296; builder-b f52bf75 (INC-1 risk applied). VERIFY H2.V1 sent.
+- 18:56 GATE PASS stage 2 @64f99e9 (official-s2-b). OPEN REJECT INC2.1 | L1.17 sibling of INC-1 | builder-b | seeded/imported party exceeds capacity. UI family probes pending (investigator).
