@@ -86,3 +86,56 @@ places (s1): reset fixture user/restaurant/table/reservation ids (reject > 64 �
 - RISK F2 | s2 pairs occupy both tables; s3 duration from accepted terms; s4 closures as occupancy.
 - RISK F3 | s3 policies, series; s4 replans, apply, series amend — five new idempotent paths.
 - RISK F6/F10 | s3/s4 revision counters, history and series must be atomic and survive import of older-stage state.
+
+# Stage 2 family map (investigator, stage-2 start)
+
+## Stage-1 families extended by stage 2
+- F1 time: UI shows local times (`slot-{table}-{HH:MM}`, booking-summary, confirmation-details) — must use `starts_at_local`, never browser-zone conversion of `starts_at`; DST days in the grid (skipped/repeated hour) must render one cell per slot.
+- F2 occupancy: a booking occupies EVERY table in its set; overlap check, availability (`available_table_ids` and `available_options`), cancel ("Cancelling frees every table in the set"), PATCH self-exclusion, moves ("No table may belong to overlapping resulting bookings"), seeded pairs, reset/import integrity check (INC-1 checkIntegrity).
+- F3 idempotency: browser retry must reuse the same key AND same body; changing a field mints a new key; pending key survives export/import.
+- F4 errors: new codes `combination_not_allowed` (unlisted pair, >2 tables), 422 for both `table_id`+`table_ids`, duplicate ids in the set → 422 `validation_failed`; wrong JSON type of `table_ids` → 400.
+- F5 auth: browser token survives export/import ("A browser signed in before that export/import upgrade must remain signed in"); `current-user` on every screen.
+- F6 atomicity: pair booking takes both tables or neither; moves with pairs all-or-nothing.
+- F8 response shape: always `table_ids`; `table_id` only when the set has exactly one member — on create, replay, GET, list, cancel, PATCH, moves, seeded and imported stage-1 bookings.
+- F9 bookability: capacity = sum of pair; pair must be in `combinable` (unordered); same rules on create, PATCH, moves, seeds.
+- F10 durability: stage-1 export → stage-2 import (missing `combinable` = [], missing `table_ids` = [table_id], stage-1 receipts replay byte-identical — a stage-1 replay must not gain `table_ids` if the original lacked it).
+
+## F12 — A booking holds a table SET of one or two members; every surface that reads or writes a table handles the set (single = set of one), with pair order = `combinable` order.
+quotes: "`table_id` is still accepted and means a set of one." · "Responses always carry `table_ids`." · "`table_ids` within a pair is in `combinable` order." · "Each entry is an unordered pair of table ids in that restaurant. **Pairs only**" · "Combining is not transitive"
+places: availability options; create; PATCH; cancel; moves; seeded reservations (`table_id` or `table_ids`); import; UI combination cells `slot-{t_a}+{t_b}-{HH:MM}`, booking-summary, confirmation-tables, reservation-tables.
+
+## F13 — The data-testid contract is exact: names, presence rules ("present only when"), exact text, and `data-available` equals membership in the API's list for the searched party size.
+quotes: "`auth-error` | Error message. Present only when there is one" · "`confirmation-reference` | Text is exactly the reference, no surrounding words" · "`reservation-status` | Text is exactly `confirmed` or `cancelled`" · "A cell is `true` exactly when its `table_id` is in that slot's `available_table_ids`" · "`reservation-cancel-button` | Cancels. Absent once cancelled"
+places: signup/login/logout/current-user, grid cells (single + pair), no-slots, booking-form/summary/party-size/error, confirmation*, lookup*, every error element (auth-error, booking-error, reservation-error) — present only when there is an error, removed on success.
+
+## F14 — Latest request wins: a response that is not for the newest request of its kind must not render.
+quotes: "If search A starts before search B but finishes after it, the grid, table labels and booking form must describe B. A late response must not restore A's results."
+places: search grid; availability refresh after 409; booking form opened from an old grid; lookup (two lookups out of order); restaurant detail fetch for table labels.
+
+## F15 — Uncertain outcome: a lost response shows `booking-uncertain`, never error or confirmation; the unchanged form retries with the same key and body; success shows the ORIGINAL reference; the browser never manufactures success.
+quotes: "If a booking response is lost, including after the booking commits, show nonempty `booking-uncertain` text" · "The unchanged form must retry with the same idempotency key and body." · "Submitting it again without changing a field must return the same `confirmation-reference`" · "These rules apply to combination bookings too."
+places: single booking, pair booking, retry across export/import upgrade, 409 path (error + refresh + preserved inputs), resubmit after success.
+
+## F16 — Product quality on every required route: 375px with no horizontal scroll, visible labels, visible focus, contrast, distinct states, consistent nav, considered empty/loading/error states.
+quotes: "The required flows must remain clear and usable at a 375 CSS-pixel viewport and at conventional desktop widths, without horizontal page scrolling."
+places: `/`, `/signup`, `/login`, `/lookup`, grid with many slots × tables (+ pairs), confirmation, error states.
+
+## F17 — Upgrade compatibility: state, tokens, references and pending retries from the previous stage survive export/import into this stage, between browser requests, without reload.
+quotes: "A stage-2 service must accept an export produced by the same team's stage-1 service." · "The form and pending retry identity must survive the upgrade."
+places: import defaults for every new field; browser session token; lookup by old reference; pending retry; stage-1 idempotency receipts.
+
+## F18 — Concurrency equals some serial order; invariants hold at every read.
+quotes: "Concurrent requests must produce the same results as executing them one at a time in some order, and the requirements above hold at every read."
+places: create (single/pair racing for a shared member), PATCH, cancel, moves, import vs writes. D2 synchronous handlers must have no `await` between read and commit in any new path.
+
+# RISK list (stage 2)
+- RISK INC-1 | reset/import must validate every API invariant | applies to "`combinable`" (pair members belong to the restaurant, exactly 2, distinct, no duplicate pair) and "Seeded `reservations` are `confirmed` unless they carry a `status` of `cancelled`, and may hold either `table_id` or `table_ids`" (pair must be declared, overlap on any member, both fields → reject)
+- RISK F2/F12 | overlap per member | applies to "occupies both tables for its full duration" across create, PATCH self-exclusion, moves, cancel, seeds, availability
+- RISK F8/F12 | `table_id` only for sets of one | applies to every reservation response incl. replays and imported stage-1 receipts
+- RISK F9/F12 | unordered pair, non-transitive, summed capacity | applies to create, PATCH, moves alike
+- RISK F10/F17 | stage-1 export must import; defaults for missing fields | applies to "A stage-2 service must accept an export produced by the same team's stage-1 service"
+- RISK F13 | error elements present only when an error exists | applies to auth-error, booking-error, reservation-error
+- RISK F14 | out-of-order | applies to search, lookup, post-409 refresh
+- RISK F15 | same key+body retry incl. pairs and across upgrade | applies to "The form and pending retry identity must survive the upgrade."
+- RISK F1 | UI local time from `starts_at_local` only | applies to cell ids `{HH:MM}` and summaries
+- RISK F16 | 375px | applies to the grid with pair cells
