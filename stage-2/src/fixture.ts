@@ -71,6 +71,7 @@ function checkIntegrity(s: State): void {
     const rest = s.restaurants.find((q) => q.id === r.restaurant_id);
     if (!rest) bad("reservation names an unknown restaurant");
     if (!r.table_ids.length || !r.table_ids.every((id) => rest!.tables.some((t) => t.id === id))) bad("reservation names a table that is not at its restaurant");
+    if (r.table_ids.length > 2 || (r.table_ids.length === 2 && !rest!.combinable.some((p) => p.includes(r.table_ids[0]) && p.includes(r.table_ids[1])))) bad("reservation holds tables that are not a declared combination");
     if (!userIds.has(r.user_id)) bad("reservation names an unknown user");
     if (r.status === "confirmed" && findOverlap(placed, r.restaurant_id, r.table_ids, r.start_ms, r.end_ms)) bad("two confirmed reservations overlap on one table");
     placed.reservations.push(r);
