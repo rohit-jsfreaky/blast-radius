@@ -5,7 +5,7 @@ import type { HistoryEntry } from "./history.ts";
 import type { Terms } from "./policies.ts";
 import { formatInstant } from "./time.ts";
 
-export const STATE_VERSION = 3;
+export const STATE_VERSION = 4;
 
 export interface ScryptHash { algo: "scrypt"; N: number; r: number; p: number; salt: string; hash: string }
 export interface User { id: string; email: string; display_name: string; password: ScryptHash; created_at: string }
@@ -20,6 +20,15 @@ export interface Terms {
 export interface Policy extends Terms { effective_from: string }
 export interface SeriesOccurrence { index: number; reference: string; exception: boolean }
 export interface Series { series_id: string; user_id: string; restaurant_id: string; revision: number; interval_weeks: number; occurrences: SeriesOccurrence[] }
+/** An applied table closure: the half-open interval [from_ms, to_ms) on one table is occupied. from/to keep the offsets as supplied. */
+export interface Closure { table_id: string; from: string; to: string; from_ms: number; to_ms: number; plan_id: string }
+export interface PlanAssignment { reference: string; table_ids: string[]; changed: boolean }
+/** A stored replan preview. It changes nothing until applied; applying needs the restaurant revision it was made at. */
+export interface Plan {
+  plan_id: string; restaurant_id: string; restaurant_revision: number;
+  closure: { table_id: string; from: string; to: string; from_ms: number; to_ms: number };
+  assignments: PlanAssignment[]; moved_count: number; unused_seats: number; applied: boolean;
+}
 export interface Restaurant {
   id: string; name: string; timezone: string; slot_minutes: number;
   reservation_duration_minutes: number; cancellation_cutoff_minutes: number;
@@ -32,6 +41,8 @@ export interface Restaurant {
   policies: Policy[];
   /** Restaurant revision counter: 0 after reset; +1 per successful booking, real amendment, cancellation, policy publication, batch, adoption. */
   revision: number;
+  /** Applied closures (stage 4), in application order. */
+  closures: Closure[];
 }
 /** Public fields (what the API returns) + owner + the instants used for occupancy. */
 export interface Reservation {
@@ -45,19 +56,20 @@ export interface Reservation {
 export interface Receipt { method: string; path: string; key: string; user_id: string; body_canon: string; status: number; response: unknown }
 export interface State {
   version: number;
-  seq: { user: number; reservation: number; series?: number };
+  seq: { user: number; reservation: number; series?: number; plan?: number };
   users: User[];
   tokens: Record<string, string>; // bearer token -> user id
   restaurants: Restaurant[];
   reservations: Reservation[];
   series: Series[];
+  plans: Plan[];
   idempotency: Record<string, Receipt>; // key from idempotencyId() in idempotency.ts
   [extra: string]: unknown;
 }
 
 export const emptyState = (): State => ({
   version: STATE_VERSION, seq: { user: 0, reservation: 0 },
-  users: [], tokens: {}, restaurants: [], reservations: [], series: [], idempotency: {},
+  users: [], tokens: {}, restaurants: [], reservations: [], series: [], plans: [], idempotency: {},
 });
 
 let committed: State = emptyState();
@@ -87,8 +99,14 @@ export const restaurantById = (s: State, id: string): Restaurant | undefined => 
 export const reservationByRef = (s: State, ref: string): Reservation | undefined => s.reservations.find((r) => r.reference === ref);
 
 /** A confirmed reservation at that restaurant holding ANY of `tableIds` (table ids are only unique within a restaurant) whose half-open interval [start_ms, end_ms) overlaps [startMs, endMs). The one occupancy predicate for singles and pairs. */
+/** Stand-in returned by findOverlap when an applied closure (not a booking) holds the interval. */
+export const CLOSED = { closed: true } as unknown as Reservation;
+
 export function findOverlap(s: State, restaurantId: string, tableIds: string | string[], startMs: number, endMs: number, ignoreRef?: string): Reservation | undefined {
   const ids = typeof tableIds === "string" ? [tableIds] : tableIds;
+  // An applied closure occupies its table for [from, to) exactly like a booking does.
+  const rest = s.restaurants.find((r) => r.id === restaurantId);
+  if (rest && (rest.closures ?? []).some((c) => ids.includes(c.table_id) && c.from_ms < endMs && startMs < c.to_ms)) return CLOSED;
   return s.reservations.find(
     (r) => r.status === "confirmed" && r.restaurant_id === restaurantId && r.reference !== ignoreRef && r.start_ms < endMs && startMs < r.end_ms
       && r.table_ids.some((t) => ids.includes(t)),
@@ -130,6 +148,15 @@ export function newSeriesId(s: State): string {
   const taken = new Set(s.series.map((x) => x.series_id));
   for (;;) {
     const id = `ser_${(s.seq.series = (s.seq.series ?? 0) + 1)}`;
+    if (!taken.has(id)) return id;
+  }
+}
+
+/** `plan_<n>`, unique among stored plans. */
+export function newPlanId(s: State): string {
+  const taken = new Set(s.plans.map((x) => x.plan_id));
+  for (;;) {
+    const id = `plan_${(s.seq.plan = (s.seq.plan ?? 0) + 1)}`;
     if (!taken.has(id)) return id;
   }
 }
