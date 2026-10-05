@@ -78,6 +78,7 @@ function checkIntegrity(s: State): void {
   for (const r of s.restaurants) {
     if (restIds.has(r.id)) bad("duplicate restaurant id");
     restIds.add(r.id);
+    for (const m of r.manager_user_ids) if (!userIds.has(m)) bad("manager_user_ids names an unknown user");
     const tids = new Set<string>();
     for (const t of r.tables) { if (tids.has(t.id)) bad("duplicate table id within a restaurant"); tids.add(t.id); }
   }
@@ -107,6 +108,7 @@ function checkSeries(s: State): void {
     if (ids.has(sid)) bad("duplicate series id");
     ids.add(sid);
     if (!isInt(x.revision) || x.revision < 1 || !isInt(x.interval_weeks) || x.interval_weeks < 1 || x.interval_weeks > 4) bad("series revision or interval is invalid");
+    if (!s.users.some((u) => u.id === x.user_id) || !s.restaurants.some((q) => q.id === x.restaurant_id)) bad("series names an unknown user or restaurant");
     const occ = arr(x.occurrences, "series occurrences");
     if (occ.length < 2 || occ.length > 12) bad("a series has 2 to 12 occurrences");
     occ.forEach((o, i) => {
