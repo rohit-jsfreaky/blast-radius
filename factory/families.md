@@ -139,3 +139,51 @@ places: create (single/pair racing for a shared member), PATCH, cancel, moves, i
 - RISK F15 | same key+body retry incl. pairs and across upgrade | applies to "The form and pending retry identity must survive the upgrade."
 - RISK F1 | UI local time from `starts_at_local` only | applies to cell ids `{HH:MM}` and summaries
 - RISK F16 | 375px | applies to the grid with pair cells
+
+# Stage 3 family map (investigator, stage-3 start)
+
+## Earlier families extended by stage 3
+- F1 time: policy selected by the booking's **local start date** (not UTC date, not publication date); series occurrence i = anchor local date + i×interval×7 days at the same local clock time (nonexistent → whole adoption `invalid_local_time`, repeated → first occurrence); `effective_from` a real `YYYY-MM-DD`; history `at` RFC 3339 with offset.
+- F2 occupancy: a booking's interval length comes from its **accepted terms** duration, not the restaurant's current config; availability/explain `no_overlap` uses each existing booking's own end; the slot's interval uses the slot date's policy duration.
+- F3 idempotency: new paths POST /restaurants/{id}/policies and POST /series (one shared helper, path in key); replays allocate no version, record no history, change no counter, and return the ORIGINAL revision/terms.
+- F4 errors: explain only `true`; policy integers 1..1440 / 0..10080, capacities 1..100, booleans are not integers, no duplicate weekdays, capacities names exactly the table ids; count 2..12, interval_weeks 1..4; expected_revision: invalid → 422, mismatch → 409 stale_revision before cutoff/validation.
+- F5 auth: managers only for policies (403 non-manager, 404 unknown restaurant, 401 no token); history/decision/series owner-only and 404 even without a token; managers gain no access to diners' data.
+- F6 atomicity: failed policy → no version; failed adoption → no series, reservations, histories, counters or idempotency claim; failed amendment/moves → no revision, history, exception flag.
+- F7 cutoff: against the **accepted** cutoff and the current start; real amendment checks the OLD accepted cutoff before adopting new terms; series anchor must satisfy its cutoff; a no-op still needs a confirmed editable booking.
+- F8 shape: every reservation response gains `revision` and `accepted_terms` — create, replay (original values), GET, list, cancel, PATCH, moves, series occurrences, decision.
+- F9 bookability: validate against the policy for the RESULTING start date (grid, hours, duration, capacities); pair capacity = sum of the selected policy's capacities.
+- F10/F17 durability: stage-1 and stage-2 exports must import (defaults: no policies, revision 1, accepted_terms = policy-0 snapshot, history, no series) and adoption must work on them; stage-3 export carries policies, versions, revisions, terms, histories, series, exception flags, restaurant revision, receipts.
+- F12 table sets: history uses `table_ids` for pair creation/changes, `table_id` for single-to-single; a reversed pair is not a change.
+- F18 concurrency: two amendments with one expected_revision → at most one real change.
+- INC-1/INC-2 seeded input: `manager_user_ids` (users exist); seeded bookings get revision 1 under policy 0 and must fit policy-0 capacity; imported policies/series/histories validated as the API would create them.
+
+## F19 — Counters move exactly once per successful real operation and never on failure, replay or no-op.
+quotes: "`seq` starts at 1 and increases by exactly 1" · "Failed writes and replays allocate no version." · "Cancel increments revision once; repeated cancel does not." · "Adoption increments the restaurant revision once for the whole operation." · "the restaurant revision increases once for the whole batch"
+places: reservation revision (create 1, real PATCH +1, cancel +1, no-op 0, repeated cancel 0, moves +1 per changed booking); history seq; policy_version per restaurant; series revision (real PATCH +1 and exception, cancel +1, moves once per affected series); restaurant revision (adoption, moves; stage 4 counts every write — build it now); all preserved by export/import.
+
+## F20 — Accepted terms are a frozen snapshot: decisions about an existing booking use the terms it was accepted under; only a real amendment replaces them (once, atomically, from the policy of the resulting start date); history entries and replays keep the terms they were written with.
+quotes: "These are a snapshot of the entire selected policy, excluding `effective_from`." · "publication never retroactively edits a booking" · "Old entries never acquire newer terms." · "Responses to old idempotency keys remain the original response, including the original revision and terms."
+places: cancel/PATCH/moves/anchor cutoff, end time and occupancy, history entries, decision, replays of create/moves/series, imported bookings (policy 0), series occurrences (own date's policy).
+
+## F21 — A no-op is not a change: same-value amendment succeeds but records no history, revision or exception, keeps terms and end time; a reversed pair is a no-op.
+quotes: "A `PATCH` that sets a field to the value it already has changed nothing: it still succeeds, and it records **no entry at all**." · "A no-op amendment retains terms, end time and revision and records no history." · "A reversed input pair names the same set and is not an amendment on its own."
+places: PATCH, moves items, series occurrence PATCH; stage 4 series amend and replan unmoved bookings.
+
+## F22 — Policy selection: greatest `effective_from` not later than the local start date, ties → greatest `policy_version`; policy 0 = fixture; restaurant detail still shows the fixture.
+quotes: "For a booking's **local start date**, choose the greatest `effective_from` not later than that date; ties choose the greatest `policy_version`." · "The ordinary restaurant detail still returns its original fixture configuration."
+places: availability slots/durations/capacities and explain policy_version, create, PATCH (resulting date), moves, series occurrences (each its own date), UI grid.
+
+# RISK list (stage 3)
+- RISK INC-1/INC-2 | every new state passes reset/import integrity | "Restaurants may now declare `manager_user_ids` in their reset fixture (default `[]`)", imported policies, series, histories, revisions
+- RISK F3 | one shared idempotency helper | "`POST /restaurants/{id}/policies` requires an idempotency key, with stage 1's replay rules" and "Series creation adds one idempotent write path."
+- RISK F10/F17 | stage-1/2 exports import with defaults | "A stage-3 service must accept exports produced by the same team's stage-1 or stage-2 service. Adoption must work on reservations imported this way."
+- RISK F1/F22 | policy by LOCAL start date | "For a booking's **local start date**"
+- RISK F2/F20 | occupancy end from accepted duration | "A policy publication does not change existing bookings, their end times, or their history."
+- RISK F19 | counters once, never on failure/replay/no-op | revision, seq, policy_version, series revision, restaurant revision
+- RISK F21 | no-op records nothing | PATCH, moves, reversed pair
+- RISK F5 | 404 without token | "History and decision return 404 even without authentication"
+- RISK F12 | history table_ids vs table_id | "For a change involving a pair, use `table_ids` (complete before/after lists) instead of `table_id`."
+- RISK F6 | series all-or-nothing | "No partial series, reservations, histories, counters or idempotency claim survive failure."
+# Carried toward stage 4
+- RISK F19 | restaurant revision counts every successful new booking, real amendment, cancellation, policy publication and plan application — implement it on every write path now.
+- RISK F20 | replans keep accepted terms; series amend adopts the new date's policy.
