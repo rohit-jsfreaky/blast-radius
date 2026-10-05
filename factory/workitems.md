@@ -25,3 +25,8 @@ Written by @coordinator. One row per item. `quote` = the requirement text the it
 | WI3.5 | builder-b | "Every reservation response gains `revision` (1 at creation) and `accepted_terms`" ; "## Reservation history" ; "`PATCH` optionally accepts `expected_revision`" | | WI1.4, WI1.5 | H3.2 |
 | WI3.6 | builder-b | "## Combined-table history" | | WI2.6 | H3.2 |
 | WI3.7 | builder-b | "## Collective moves under policies and agreements" | | WI1.6, WI2.7 | H3.2 |
+| WI4.1 | builder-a | "`POST /restaurants/{id}/replans` requires a manager and an idempotency key." ; "Among feasible plans minimize, in order:" | | | H4.1 |
+| WI4.2 | builder-a | "`POST /restaurants/{id}/replans/{plan_id}/apply`, body `{}`, requires a manager and an idempotency key." ; "Closures thereafter exclude singles and pairs from availability" | | WI1.2, WI2.5, WI3.2 | H4.1 |
+| WI4.3 | builder-b | "`POST /series/{series_id}/amend` is an owner-only idempotent write." | | WI3.3 | H4.2 |
+| WI4.4 | builder-b | "Seating repairs may move series occurrences. They preserve their exception flags, scheduled dates, identities and accepted terms." | | WI3.3 | H4.2 |
+| WI4.5 | builder-b | "A stage-4 service must accept exports produced by the same team's stages 1–3." ; "A restaurant revision starts at 0 after reset and increments once for each successful new booking, real amendment, cancellation, policy publication or plan application." | | WI3.4 | H4.2 |

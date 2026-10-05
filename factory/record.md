@@ -11,7 +11,8 @@ end:
 |---|---|---|---|---|---|---|
 | 1 | 17:47 | 18:28 | 5014e13 | 1 / 5 | INC-1 (family 9) | GATE PASS, SWEEP CLEAR; ledger probed 11/61 (limitation) |
 | 2 | 18:32 | 19:06 | fe88890 | 0 / 1 (INC-2) | INC-2 (family 4) | GATE PASS official-s2-c, SWEEP CLEAR |
-| 3 | 19:10 | | | | | |
+| 3 | 19:10 | 19:36 | 7417cd3 | 0 / 1 (INC-3) | INC-3 (family 4) | GATE PASS official-s3-b, SWEEP CLEAR |
+| 4 | 19:36 | | | | | |
 
 ## Open REJECTs
 (none)
@@ -36,3 +37,4 @@ end:
 - 19:06 STAGE 2 DONE rev fe88890. 19:10 STAGE PLAN 3 + H3.1 (builder-a WI3.1-3.4) + H3.2 (builder-b WI3.5-3.7) sent.
 - 19:15 READY H3.1 + H3.2 on 1c39408. VERIFY H3.V1 sent (D23 400-vs-422 to be ruled).
 - 19:30 GATE PASS stage 3 @542cd39 (official-s3-a). OPEN REJECT INC3.1 | L1.17 sibling | builder-a | unknown manager_user_ids accepted at reset/import. Awaiting fix + SWEEP CLEAR.
+- 19:36 STAGE 3 DONE rev 7417cd3. STAGE PLAN 4 + H4.1 (builder-a WI4.1-4.2) + H4.2 (builder-b WI4.3-4.5) sent.
