@@ -4,6 +4,7 @@ import { validation } from "./errors.ts";
 import { hashPassword } from "./auth.ts";
 import { emptyState, findOverlap, nowRfc3339, STATE_VERSION } from "./store.ts";
 import type { Receipt, Reservation, Restaurant, State, User } from "./store.ts";
+import { setCapacity } from "./tables.ts";
 import { addMinutes, formatInstant, isValidZone, localToInstant, parseLocal } from "./time.ts";
 import { isInt, isObj } from "./validate.ts";
 import type { Obj } from "./validate.ts";
@@ -72,6 +73,7 @@ function checkIntegrity(s: State): void {
     if (!rest) bad("reservation names an unknown restaurant");
     if (!r.table_ids.length || !r.table_ids.every((id) => rest!.tables.some((t) => t.id === id))) bad("reservation names a table that is not at its restaurant");
     if (r.table_ids.length > 2 || (r.table_ids.length === 2 && !rest!.combinable.some((p) => p.includes(r.table_ids[0]) && p.includes(r.table_ids[1])))) bad("reservation holds tables that are not a declared combination");
+    if (r.party_size > setCapacity(rest!, r.table_ids)) bad("reservation party_size exceeds the capacity of its tables");
     if (!userIds.has(r.user_id)) bad("reservation names an unknown user");
     if (r.status === "confirmed" && findOverlap(placed, r.restaurant_id, r.table_ids, r.start_ms, r.end_ms)) bad("two confirmed reservations overlap on one table");
     placed.reservations.push(r);
