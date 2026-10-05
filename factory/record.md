@@ -38,3 +38,4 @@ end:
 - 19:15 READY H3.1 + H3.2 on 1c39408. VERIFY H3.V1 sent (D23 400-vs-422 to be ruled).
 - 19:30 GATE PASS stage 3 @542cd39 (official-s3-a). OPEN REJECT INC3.1 | L1.17 sibling | builder-a | unknown manager_user_ids accepted at reset/import. Awaiting fix + SWEEP CLEAR.
 - 19:36 STAGE 3 DONE rev 7417cd3. STAGE PLAN 4 + H4.1 (builder-a WI4.1-4.2) + H4.2 (builder-b WI4.3-4.5) sent.
+- 19:44 READY H4.1 + H4.2 on ad9619b. VERIFY H4.V1 sent.
